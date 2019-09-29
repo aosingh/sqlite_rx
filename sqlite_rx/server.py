@@ -50,10 +50,8 @@ class SQLiteZMQProcess(multiprocessing.Process):
         Creates a `context` and an event `loop` for the process
         :return:
         """
-        self.info("ZMQProcess Super method")
         self.context = zmq.Context()
         self.loop = ioloop.IOLoop.instance()
-        self.info("Event Loop is %s" % self.loop)
 
     def stream(self,
                sock_type,
@@ -141,11 +139,9 @@ class SQLiteServer(SQLiteZMQProcess):
                                                    self._auth_config))
 
     def run(self):
-        self.info("Going to start the server")
         self.setup()
-        self.loop.start()
-        self.info("Event Loop is %s" % self.loop)
         self.info("Server Event Loop started")
+        self.loop.start()
 
     def stop(self):
         self.loop.stop()
@@ -182,7 +178,6 @@ class QueryStreamHandler:
         self._rep_stream.send(self.execute(message))
 
     def execute(self, message: dict, *args, **kwargs):
-        self._logger.debug("message is %r" % message)
         execute_many = message['execute_many']
         execute_script = message['execute_script']
 
@@ -200,7 +195,6 @@ class QueryStreamHandler:
             else:
                 self._logger.debug("sqlite remote execute: execute(without params)")
                 self._cursor.execute(message['query'])
-            self._logger.debug("Row count is %s " % self._cursor.rowcount)
         except Exception:
             self._logger.exception("Exception while executing query %s" % message['query'])
             error = self.capture_exception()
