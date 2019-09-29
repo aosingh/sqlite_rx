@@ -1,13 +1,13 @@
 # sqlite_rx [![Travis](https://travis-ci.org/aosingh/lexpy.svg?branch=master)](https://travis-ci.org/aosingh/sqlite_rx) [![Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/downloads/release/python-370/)
 
 - Python Client and Server process for SQLite database built using ZMQ and msgpack.
-- Authentication using ZeroMQ Authentication Protcol (ZAP)
+- Authentication using ZeroMQ Authentication Protocol (ZAP)
 - Encryption using CurveMQ
-- Define Authorization policies
+- Define generic authorization policies 
 
 
-***Please Note that detailed documentation explaining the configuration options for both Client and Server is in-progress. 
-Below you can find the steps to get started***
+***Please note that detailed documentation(explaining the configuration options) for both Client and Server is in-progress. 
+Below you can find the steps to quickly get started***
 
 
 # Install
@@ -141,7 +141,7 @@ OUTPUT
 
 ### DROP a TABLE
 
-Note: In the default setting a client is not allowed to drop any table.
+Note: In the default authorization setting, a client is not allowed to drop any table.
 
 ```python
 result = client.execute('DROP TABLE stocks')
@@ -155,6 +155,56 @@ OUTPUT
            'type': 'sqlite3.DatabaseError'},
  'items': []}
 ```
+
+## Default Authorization Policy
+
+
+```python
+DEFAULT_AUTH_CONFIG = {
+            sqlite3.SQLITE_OK: {
+                sqlite3.SQLITE_CREATE_INDEX,
+                sqlite3.SQLITE_CREATE_TABLE,
+                sqlite3.SQLITE_CREATE_TEMP_INDEX,
+                sqlite3.SQLITE_CREATE_TEMP_TABLE,
+                sqlite3.SQLITE_CREATE_TEMP_TRIGGER,
+                sqlite3.SQLITE_CREATE_TEMP_VIEW,
+                sqlite3.SQLITE_CREATE_TRIGGER,
+                sqlite3.SQLITE_CREATE_VIEW,
+                sqlite3.SQLITE_INSERT,
+                sqlite3.SQLITE_READ,
+                sqlite3.SQLITE_SELECT,
+                sqlite3.SQLITE_TRANSACTION,
+                sqlite3.SQLITE_UPDATE,
+                sqlite3.SQLITE_ATTACH,
+                sqlite3.SQLITE_DETACH,
+                sqlite3.SQLITE_ALTER_TABLE,
+                sqlite3.SQLITE_REINDEX,
+                sqlite3.SQLITE_ANALYZE,
+                },
+
+            sqlite3.SQLITE_DENY: {
+                sqlite3.SQLITE_DELETE,
+                sqlite3.SQLITE_DROP_INDEX,
+                sqlite3.SQLITE_DROP_TABLE,
+                sqlite3.SQLITE_DROP_TEMP_INDEX,
+                sqlite3.SQLITE_DROP_TEMP_TABLE,
+                sqlite3.SQLITE_DROP_TEMP_TRIGGER,
+                sqlite3.SQLITE_DROP_TEMP_VIEW,
+                sqlite3.SQLITE_DROP_TRIGGER,
+                sqlite3.SQLITE_DROP_VIEW,
+            },
+
+            sqlite3.SQLITE_IGNORE: {
+                sqlite3.SQLITE_PRAGMA
+            }
+
+}
+```
+
+It is recommended you **do not** override the `SQLITE_PRAGMA` action as the database starts in `pragma journal_mode=wal` mode.
+You can define your own authorization policy in a python dictionary and pass it to the `SQLiteServer` class
+as `auth_config` parameter.
+
 
 
 
