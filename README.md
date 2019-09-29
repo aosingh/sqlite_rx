@@ -201,9 +201,9 @@ DEFAULT_AUTH_CONFIG = {
 }
 ```
 
-It is recommended you **do not** override the `SQLITE_PRAGMA` action as the database starts in `pragma journal_mode=wal` mode.
 You can define your own authorization policy in a python dictionary and pass it to the `SQLiteServer` class
 as `auth_config` parameter.
+It is recommended you **do not** override the `SQLITE_PRAGMA` action as the database starts in `pragma journal_mode=wal` mode 
 
 
 
