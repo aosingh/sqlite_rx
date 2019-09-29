@@ -1,0 +1,16 @@
+env:
+  global:
+    - COVERALLS_REPO_TOKEN=2XViaRWyaV8yRZkozfEu7pC9vPpFJAXDm
+language: python
+os:
+  - linux
+python:
+  - "3.7"
+script:
+  - pip install future
+  - pip install nose
+  - pip install coverage
+  - pip install coveralls
+  - coverage run -m unittest discover -s sqlite_rx/tests
+  - coverage report -i -m
+  - coveralls

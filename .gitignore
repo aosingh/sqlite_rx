@@ -1,0 +1,4 @@
+.venv
+*.pyc
+.idea
+sqlite_rx.egg-info/
