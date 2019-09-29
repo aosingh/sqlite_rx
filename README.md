@@ -3,8 +3,11 @@
 - Python Client and Server process for SQLite database built using ZMQ and msgpack.
 - Supports Optional Encryption and Authentication using CurveZMQ
 
-## Install
-- pip install sqlite-rx
+
+# Install
+```commandline
+pip install lexpy
+```
 
 
 
