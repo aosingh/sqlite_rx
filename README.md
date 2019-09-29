@@ -6,7 +6,7 @@
 
 # Install
 ```commandline
-pip install lexpy
+pip install sqlite_rx
 ```
 
 
