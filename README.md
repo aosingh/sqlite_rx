@@ -10,7 +10,7 @@ This will allow the clients to communicate with the Server in a fast, simple and
 
 Features
 
-- Python Client and Server process for [SQLite](https://www.sqlite.org/index.html) database built using [ZeroMQ](http://zguide.zeromq.org/page:all) and [msgpack](https://msgpack.org/index.html).
+- Python Client and Server for [SQLite](https://www.sqlite.org/index.html) database built using [ZeroMQ](http://zguide.zeromq.org/page:all) and [msgpack](https://msgpack.org/index.html).
 - Authentication using [ZeroMQ Authentication Protocol (ZAP)](https://rfc.zeromq.org/spec:27/ZAP/)
 - Encryption using [CurveZMQ](http://curvezmq.org/)
 - Define generic authorization policies
