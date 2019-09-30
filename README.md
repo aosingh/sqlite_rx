@@ -18,11 +18,11 @@ Features
 ***Please note that detailed documentation(explaining the configuration options) for both Client and Server is in-progress. 
 Below you can find the steps to quickly get started***
 
-# Dependencies
-    
-    >= python3.x
 
 # Install
+
+Currently, only Python 3 is supported.
+
 ```commandline
 pip install sqlite_rx
 ```
