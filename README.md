@@ -1,6 +1,6 @@
 # sqlite_rx [![Travis](https://travis-ci.org/aosingh/lexpy.svg?branch=master)](https://travis-ci.org/aosingh/sqlite_rx) [![Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/downloads/release/python-370/)
 
-- Python Client and Server process for SQLite database built using [ZeroMQ](http://zguide.zeromq.org/page:all) and [msgpack](https://msgpack.org/index.html).
+- Python Client and Server process for [SQLite](https://www.sqlite.org/index.html) database built using [ZeroMQ](http://zguide.zeromq.org/page:all) and [msgpack](https://msgpack.org/index.html).
 - Authentication using [ZeroMQ Authentication Protocol (ZAP)](https://rfc.zeromq.org/spec:27/ZAP/)
 - Encryption using [CurveZMQ](http://curvezmq.org/)
 - Define generic authorization policies
