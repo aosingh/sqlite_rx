@@ -27,9 +27,13 @@ from sqlite_rx.server import SQLiteServer
 
 
 def main():
-    # database is a path-like object giving the pathname (absolute or relative to the current working directory) 
+
+    # database is a path-like object giving the pathname 
     # of the database file to be opened. 
-    # You can use ":memory:" to open a database connection to a database that resides in RAM instead of on disk
+    
+    # You can use ":memory:" to open a database connection to a database 
+    # that resides in RAM instead of on disk
+    
     server = SQLiteServer(database=":memory:",
                           bind_address="tcp://127.0.0.1:5000")
     try:
