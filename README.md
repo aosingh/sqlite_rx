@@ -2,17 +2,17 @@
 
 ## Introduction
 
-SQLite is a lightweight database written in C. 
+[SQLite](https://www.sqlite.org/index.html) is a lightweight database written in C. 
 The Python programming language has in-built support to interact with the database(locally) which is either stored on disk or in memory.
 
-With `sqlite_rx` clients should be able to communicate with the SQLiteServer in a fast, simple and secure manner and execute queries remotely.
+With `sqlite_rx` library, clients should be able to communicate with an SQLiteServer in a fast, simple and secure manner and execute queries remotely.
 
-Features
+Key Highlights
 
-- Python Client and Server for [SQLite](https://www.sqlite.org/index.html) database built using [ZeroMQ](http://zguide.zeromq.org/page:all) and [msgpack](https://msgpack.org/index.html).
+- Python Client and Server for [SQLite](https://www.sqlite.org/index.html) database built using [ZeroMQ](http://zguide.zeromq.org/page:all) as the transport layer and [msgpack](https://msgpack.org/index.html) for serialization/deserialization.
 - Authentication using [ZeroMQ Authentication Protocol (ZAP)](https://rfc.zeromq.org/spec:27/ZAP/)
 - Encryption using [CurveZMQ](http://curvezmq.org/)
-- Define generic authorization policies
+- Define a generic authorization policy
 
 
 ***Please note that detailed documentation(explaining the configuration options) for both Client and Server is in-progress. 
