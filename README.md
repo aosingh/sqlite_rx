@@ -5,9 +5,7 @@
 SQLite is a lightweight database written in C. 
 The Python programming language has in-built support to interact with the database(locally) which is either stored on disk or in memory.
 
-With `sqlite_rx`, I have built server and client processes for SQLite. 
-This will allow the clients to communicate with the Server in a fast, simple and secure manner and execute queries
-remotely
+With `sqlite_rx` clients should be able to communicate with the SQLiteServer in a fast, simple and secure manner and execute queries remotely.
 
 Features
 
