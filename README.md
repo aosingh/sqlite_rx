@@ -64,16 +64,14 @@ A client has a single interface ``execute``
 ### Instantiate a client
 
 ```python
-from pprint import pprint # (We will use the pprint later. This is not needed to instantiate an SQLite Client)
-
 from sqlite_rx.client import SQLiteClient
 client = SQLiteClient(connect_address="tcp://127.0.0.1:5000")
 ```
 
 ### SELECT statement: (Table not present)
 ```python
-
-result = client.execute('''SELECT * FROM IDOLS''')
+from pprint import pprint
+result = client.execute("SELECT * FROM IDOLS")
 pprint(result)
 
 ```
@@ -88,7 +86,7 @@ OUTPUT
 
 ```python
 
-result = client.execute('''CREATE TABLE stocks (date text, trans text, symbol text, qty real, price real)''')
+result = client.execute("CREATE TABLE stocks (date text, trans text, symbol text, qty real, price real)")
 pprint(result)
 ```
 OUTPUT
@@ -129,7 +127,7 @@ purchases = [('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
                  ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
                 ]
 
-result = client.execute('INSERT INTO stocks VALUES (?,?,?,?,?)', *purchases, execute_many=True)
+result = client.execute("INSERT INTO stocks VALUES (?,?,?,?,?)", *purchases, execute_many=True)
 pprint(result)
 
 ```
@@ -165,7 +163,7 @@ OUTPUT
 Note: In the default authorization setting, a client is not allowed to drop any table.
 
 ```python
-result = client.execute('DROP TABLE stocks')
+result = client.execute("DROP TABLE stocks")
 pprint(result)
 ```
 
@@ -177,7 +175,7 @@ OUTPUT
  'items': []}
 ```
 
-## Default Authorization Policy
+## Generic Default Authorization Policy
 
 
 ```python
