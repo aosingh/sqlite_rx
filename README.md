@@ -156,6 +156,39 @@ OUTPUT
            ['2006-03-28', 'BUY', 'IBM', 1000.0, 45.0]]}
 ```
 
+### Execute a script
+
+```python
+script = '''CREATE TABLE users(id INTEGER PRIMARY KEY, name TEXT, phone TEXT);
+            CREATE TABLE accounts(id INTEGER PRIMARY KEY, description TEXT);
+
+            INSERT INTO users(name, phone) VALUES ('John', '5557241'), 
+             ('Adam', '5547874'), ('Jack', '5484522');'''
+
+result = client.execute(script, execute_script=True)
+pprint(result)
+
+```
+
+OUTPUT
+```text
+{'error': None, 'items': []}
+```
+
+Select the rows inserted using the above sql_script
+
+```python
+result = client.execute("SELECT * FROM users")
+pprint(result)
+```
+
+OUTPUT
+```text
+{'error': None, 'items': [[2, 'Adam', '5547874'], 
+                          [3, 'Jack', '5484522']]}
+```
+
+
 ### DROP a TABLE
 
 Note: In the default authorization setting, a client is not allowed to drop any table.
