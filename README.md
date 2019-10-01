@@ -156,7 +156,7 @@ OUTPUT
            ['2006-03-28', 'BUY', 'IBM', 1000.0, 45.0]]}
 ```
 
-### Execute a script
+### Execute a SCRIPT
 
 ```python
 script = '''CREATE TABLE users(id INTEGER PRIMARY KEY, name TEXT, phone TEXT);
