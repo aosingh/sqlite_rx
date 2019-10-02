@@ -64,7 +64,7 @@ class Authorizer:
         for return_val, actions in self.config.items():
             if action in actions:
                 return return_val
-        return sqlite3.SQLITE_DENY
+        return sqlite3.SQLITE_OK
 
 
 class KeyGenerator:
@@ -156,5 +156,5 @@ class KeyMonkey:
             except IOError:
                 LOG.exception("Couldn't load the server public key %s " % os.path.join(self.curvedir, f"{servername}.key"))
             else:
-                LOG.info("Client connectin to %s (key %s) using curve key '%s'." % (connect_address, servername, self.my_id))
+                LOG.info("Client connecting to %s (key %s) using curve key '%s'." % (connect_address, servername, self.my_id))
                 return client

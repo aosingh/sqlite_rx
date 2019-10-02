@@ -18,3 +18,15 @@ class MissingServerCurveKeyID(Error):
 class InvalidRequest(Error):
     pass
 
+
+class RequestSendError(Error):
+    pass
+
+
+class SerializationError(Error):
+    pass
+
+
+class RequestCompressionError(Error):
+    pass
+

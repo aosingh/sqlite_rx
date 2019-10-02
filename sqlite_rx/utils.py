@@ -5,7 +5,7 @@ from colorlog import ColoredFormatter
 def setup_logger(name, level=logging.DEBUG):
     """Return a logger with a default ColoredFormatter."""
     formatter = ColoredFormatter(
-        "%(log_color)s%(levelname)-8s%(reset)s %(blue)s%(message)s",
+        "%(bold_black)s%(asctime)s - %(log_color)s%(levelname)-8s%(reset)s %(blue)s%(message)s",
         datefmt=None,
         reset=True,
         log_colors={
@@ -21,5 +21,5 @@ def setup_logger(name, level=logging.DEBUG):
     handler = logging.StreamHandler()
     handler.setFormatter(formatter)
     logger.addHandler(handler)
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(level=level)
     return logger

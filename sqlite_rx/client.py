@@ -4,6 +4,7 @@ import zmq
 
 import msgpack
 import zlib
+import logging
 
 
 DEFAULT_REQUEST_TIMEOUT = 2500
@@ -14,10 +15,14 @@ from pprint import pformat
 
 from sqlite_rx.auth import KeyMonkey
 from sqlite_rx.utils import setup_logger
-from sqlite_rx.exception import MissingServerCurveKeyID, InvalidRequest
+from sqlite_rx.exception import (MissingServerCurveKeyID,
+                                 InvalidRequest,
+                                 RequestCompressionError,
+                                 RequestSendError,
+                                 SerializationError)
 
 
-LOG = setup_logger(name=__file__)
+LOG = setup_logger(name=__name__)
 
 
 class SQLiteClient(threading.local):
@@ -76,9 +81,21 @@ class SQLiteClient(threading.local):
         }
 
         expect_reply = True
+
         while request_retries:
             LOG.info("Preparing to send request")
-            self._client.send(zlib.compress(msgpack.dumps(request)))
+            try:
+                self._client.send(zlib.compress(msgpack.dumps(request)))
+            except zmq.ZMQError:
+                LOG.exception("Exception while sending message")
+                raise RequestSendError("Transport Error")
+            except zlib.error:
+                LOG.exception("Exception while request body compression")
+                raise RequestCompressionError("zlib compression error")
+            except Exception:
+                LOG.exception("Exception while serializing the request")
+                raise SerializationError("request could not be serialized")
+
             while expect_reply:
                 socks = dict(self._poller.poll(request_timeout))
                 if socks.get(self._client) == zmq.POLLIN:
@@ -88,12 +105,10 @@ class SQLiteClient(threading.local):
                         return response
                 else:
                     LOG.warning("No response from server, Client will disconnect and retry..")
-                    self._client.setsockopt(zmq.LINGER, 0)
-                    self._client.close()
-                    self._poller.unregister(self._client)
+                    self.shutdown()
                     request_retries -= 1
                     if request_retries == 0:
-                        LOG.error("E. Server seems to be offline, abandoning")
+                        LOG.error("Server seems to be offline, abandoning")
                         break
                     LOG.info("Reconnecting and resending request %r" % request)
                     self._client = self._init_client()

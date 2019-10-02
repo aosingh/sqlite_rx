@@ -8,6 +8,7 @@ import traceback
 import multiprocessing
 
 from typing import Union, List
+from pprint import pformat
 
 from tornado import ioloop
 
@@ -20,9 +21,6 @@ from sqlite_rx.auth import Authorizer
 from sqlite_rx.exception import ZAPSetupError
 
 
-LOG = setup_logger(name=__file__)
-
-
 class SQLiteZMQProcess(multiprocessing.Process):
     """
     This is the base class for all processes and offers utility functions
@@ -33,7 +31,7 @@ class SQLiteZMQProcess(multiprocessing.Process):
         self.context = None
         self.loop = None
         self.socket = None
-        self.logger = setup_logger("zmqprocess")
+        self.logger = setup_logger(__name__)
         super(SQLiteZMQProcess, self).__init__(*args, **kwargs)
 
     def info(self, message):
@@ -79,7 +77,7 @@ class SQLiteZMQProcess(multiprocessing.Process):
 
                 self.auth = IOLoopAuthenticator(self.context)
                 #self.auth.deny([])
-                LOG.info("ZAP enabled. \n Authorizing clients in %s." % keymonkey.authorized_clients_dir)
+                self.info("ZAP enabled. \n Authorizing clients in %s." % keymonkey.authorized_clients_dir)
                 self.auth.configure_curve(domain="*", location=keymonkey.authorized_clients_dir)
                 self.auth.start()
 
@@ -161,7 +159,7 @@ class QueryStreamHandler:
         self._connection.set_authorizer(Authorizer(config=auth_config))
         self._cursor = self._connection.cursor()
         self._rep_stream = rep_stream
-        self._logger = setup_logger("query_stream_handler")
+        self._logger = setup_logger(__name__)
 
     @staticmethod
     def capture_exception():
@@ -169,18 +167,24 @@ class QueryStreamHandler:
         exc_type_string = "%s.%s" % (exc_type.__module__, exc_type.__name__)
         error = {"type": exc_type_string,
                  "message": traceback.format_exception_only(exc_type, exc_value)[-1].strip()}
-        LOG.info("Returning error object")
         return error
 
     def __call__(self, message: List):
-        message = message[-1]
-        message = msgpack.loads(zlib.decompress(message), raw=False)
-        self._rep_stream.send(self.execute(message))
+        try:
+            message = message[-1]
+            message = msgpack.loads(zlib.decompress(message), raw=False)
+            self._rep_stream.send(self.execute(message))
+        except Exception:
+            self._logger.exception("exception while preparing response")
+            error = self.capture_exception()
+            result = {"items": [],
+                      "error": error}
+            self._rep_stream.send(zlib.compress(msgpack.dumps(result)))
 
     def execute(self, message: dict, *args, **kwargs):
+        self._logger.debug("Request received is %s" % pformat(message))
         execute_many = message['execute_many']
         execute_script = message['execute_script']
-
         error = None
         try:
             if execute_script:
