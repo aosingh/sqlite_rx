@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-VERSION = '0.9.7'
+VERSION = '0.9.8'
 DISTNAME = 'sqlite_rx'
 LICENSE = 'GNU GPLv3'
 LONG_DESCRIPTION = "sqlite_rx implements a simple, fast, reliable and secure client/server interfaces for SQLite."
