@@ -217,10 +217,6 @@ class QueryStreamHandler:
         if error:
             return zlib.compress(msgpack.dumps(result))
 
-        row = self._cursor.fetchone()
-        if row is None:
-            return zlib.compress(msgpack.dumps(result))
-
         try:
             for row in self._cursor.fetchall():
                 result['items'].append(row)
