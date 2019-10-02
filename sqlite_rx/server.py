@@ -21,27 +21,31 @@ from sqlite_rx.auth import Authorizer
 from sqlite_rx.exception import ZAPSetupError
 
 
+logger = setup_logger(__name__)
+
+
 class SQLiteZMQProcess(multiprocessing.Process):
     """
     This is the base class for all processes and offers utility functions
     for setup and creating new streams
     """
 
+
+
     def __init__(self, *args, **kwargs):
         self.context = None
         self.loop = None
         self.socket = None
-        self.logger = setup_logger(__name__)
         super(SQLiteZMQProcess, self).__init__(*args, **kwargs)
 
     def info(self, message):
-        self.logger.info(message)
+        logger.info(message)
 
     def debug(self, message):
-        self.logger.debug(message)
+        logger.debug(message)
 
     def log_exception(self, message):
-        self.logger.exception(message)
+        logger.exception(message)
 
     def setup(self):
         """
@@ -159,7 +163,7 @@ class QueryStreamHandler:
         self._connection.set_authorizer(Authorizer(config=auth_config))
         self._cursor = self._connection.cursor()
         self._rep_stream = rep_stream
-        self._logger = setup_logger(__name__)
+
 
     @staticmethod
     def capture_exception():
@@ -175,32 +179,32 @@ class QueryStreamHandler:
             message = msgpack.loads(zlib.decompress(message), raw=False)
             self._rep_stream.send(self.execute(message))
         except Exception:
-            self._logger.exception("exception while preparing response")
+            logger.exception("exception while preparing response")
             error = self.capture_exception()
             result = {"items": [],
                       "error": error}
             self._rep_stream.send(zlib.compress(msgpack.dumps(result)))
 
     def execute(self, message: dict, *args, **kwargs):
-        self._logger.debug("Request received is %s" % pformat(message))
+        logger.debug("Request received is %s" % pformat(message))
         execute_many = message['execute_many']
         execute_script = message['execute_script']
         error = None
         try:
             if execute_script:
-                self._logger.debug("sqlite remote execute: execute_script")
+                logger.debug("sqlite remote execute: execute_script")
                 self._cursor.executescript(message['query'])
             elif execute_many and message['params']:
-                self._logger.debug("sqlite remote execute: execute_many")
+                logger.debug("sqlite remote execute: execute_many")
                 self._cursor.executemany(message['query'], message['params'])
             elif message['params']:
-                self._logger.debug("sqlite remote execute: execute(with params)")
+                logger.debug("sqlite remote execute: execute(with params)")
                 self._cursor.execute(message['query'], message['params'])
             else:
-                self._logger.debug("sqlite remote execute: execute(without params)")
+                logger.debug("sqlite remote execute: execute(without params)")
                 self._cursor.execute(message['query'])
         except Exception:
-            self._logger.exception("Exception while executing query %s" % message['query'])
+            logger.exception("Exception while executing query %s" % message['query'])
             error = self.capture_exception()
 
         result = {
@@ -222,7 +226,7 @@ class QueryStreamHandler:
                 result['items'].append(row)
             return zlib.compress(msgpack.dumps(result))
         except:
-            self._logger.exception("Exception while collecting rows")
+            logger.exception("Exception while collecting rows")
             result['error'] = self.capture_exception()
             return zlib.compress(msgpack.dumps(result))
 
