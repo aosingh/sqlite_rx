@@ -7,12 +7,12 @@ The Python programming language has in-built support to interact with the databa
 
 With `sqlite_rx`, clients should be able to communicate with an `SQLiteServer` in a fast, simple and secure manner and execute queries remotely.
 
-Key Highlights
+Key Features
 
 - Python Client and Server for [SQLite](https://www.sqlite.org/index.html) database built using [ZeroMQ](http://zguide.zeromq.org/page:all) as the transport layer and [msgpack](https://msgpack.org/index.html) for serialization/deserialization.
-- Authentication using [ZeroMQ Authentication Protocol (ZAP)](https://rfc.zeromq.org/spec:27/ZAP/)
-- Encryption using [CurveZMQ](http://curvezmq.org/)
-- Define a generic authorization policy
+- Supports authentication using [ZeroMQ Authentication Protocol (ZAP)](https://rfc.zeromq.org/spec:27/ZAP/)
+- Supports encryption using [CurveZMQ](http://curvezmq.org/)
+- Allows the users to define a generic authorization policy during server startup
 
 
 ***Please note that detailed documentation(explaining the configuration options) for both Client and Server is in-progress. 
@@ -30,6 +30,8 @@ pip install sqlite_rx
 # Examples
 
 ## Server
+
+`SQLiteServer` runs in a single thread and follows an event-driven concurrency model (using `tornado's` event loop) which minimizes the cost of concurrent client connections.
 
 ```python
 from sqlite_rx.server import SQLiteServer
@@ -57,7 +59,20 @@ if __name__ == '__main__':
 
 ## Client
 
-A client has a single interface ``execute``
+`SQLiteClient` is a thin client with a single interface called `execute`
+
+The `execute` method reacts to the following keyword arguments:
+
+1. `execute_many`: True if you want to insert multiple rows with one execute call.
+
+2. `execute_script`: True if the query is a script with multiple SQL caommnds.
+
+3. `request_timeout`: Time in ms to wait for a response before retrying. Default is 2500 ms
+
+4. `retries`: Number of times to retry before abandoning the request. Default is 5
+
+
+Below are a few examples
 
 ### Instantiate a client
 
