@@ -1,10 +1,11 @@
 # sqlite_rx [![Travis](https://travis-ci.org/aosingh/lexpy.svg?branch=master)](https://travis-ci.org/aosingh/sqlite_rx) [![Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/downloads/release/python-370/) [![PyPI version](https://badge.fury.io/py/sqlite-rx.svg)](https://pypi.python.org/pypi/sqlite-rx)
 
-## Introduction
+## Background
 
 [SQLite](https://www.sqlite.org/index.html) is a lightweight database written in C. 
 The Python programming language has in-built support to interact with the database(locally) which is either stored on disk or in memory.
 
+## Introducing sqlite_rx (SQLite remote execution)
 With `sqlite_rx`, clients should be able to communicate with an `SQLiteServer` in a fast, simple and secure manner and execute queries remotely.
 
 Key Features
