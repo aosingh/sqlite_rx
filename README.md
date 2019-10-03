@@ -59,13 +59,13 @@ if __name__ == '__main__':
 
 ## Client
 
-`SQLiteClient` is a thin client with a single interface called `execute`
+`SQLiteClient` is a thin client with a single method called `execute`
 
 The `execute` method reacts to the following keyword arguments:
 
 1. `execute_many`: True if you want to insert multiple rows with one execute call.
 
-2. `execute_script`: True if the query is a script with multiple SQL caommnds.
+2. `execute_script`: True if you want to execute a script with multiple SQL commands.
 
 3. `request_timeout`: Time in ms to wait for a response before retrying. Default is 2500 ms
 
