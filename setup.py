@@ -1,9 +1,14 @@
+from os import path
 from setuptools import setup, find_packages
 
-VERSION = '0.9.8'
+this_directory = path.abspath(path.dirname(__file__))
+
+with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
+    long_description = f.read()
+
+VERSION = '0.9.9-beta'
 DISTNAME = 'sqlite_rx'
 LICENSE = 'GNU GPLv3'
-LONG_DESCRIPTION = "sqlite_rx implements a simple, fast, reliable and secure client/server interfaces for SQLite."
 AUTHOR = 'Abhishek Singh'
 MAINTAINER = 'Abhishek Singh'
 MAINTAINER_EMAIL = 'aosingh@asu.edu'
@@ -31,7 +36,7 @@ keywords = 'sqlite client server'
 
 setup(
     name=DISTNAME,
-    long_description=LONG_DESCRIPTION,
+    long_description=long_description,
     author=AUTHOR,
     author_email=MAINTAINER_EMAIL,
     maintainer=MAINTAINER,
