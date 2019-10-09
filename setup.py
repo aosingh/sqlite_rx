@@ -6,7 +6,7 @@ this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
-VERSION = '0.9.9-beta'
+VERSION = '0.9.91'
 DISTNAME = 'sqlite_rx'
 LICENSE = 'GNU GPLv3'
 AUTHOR = 'Abhishek Singh'
