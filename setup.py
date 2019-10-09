@@ -37,6 +37,7 @@ keywords = 'sqlite client server'
 setup(
     name=DISTNAME,
     long_description=long_description,
+    long_description_content_type='text/markdown',
     author=AUTHOR,
     author_email=MAINTAINER_EMAIL,
     maintainer=MAINTAINER,
