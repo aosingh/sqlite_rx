@@ -7,6 +7,7 @@ from pprint import pformat
 
 import msgpack
 import zmq
+from sqlite_rx import DEFAULT_LOGGING
 from sqlite_rx.auth import KeyMonkey
 from sqlite_rx.exception import (
     InvalidRequest,
@@ -22,11 +23,7 @@ REQUEST_RETRIES = 5
 
 
 PARENT_DIR = os.path.dirname(__file__)
-logging.config.fileConfig(
-    os.path.join(
-        PARENT_DIR,
-        "logging.conf"),
-    disable_existing_loggers=False)
+logging.config.dictConfig(DEFAULT_LOGGING)
 
 LOG = logging.getLogger(__name__)
 

@@ -11,6 +11,7 @@ from typing import List, Union
 
 import msgpack
 import zmq
+from sqlite_rx import DEFAULT_LOGGING
 from sqlite_rx.auth import Authorizer, KeyMonkey
 from sqlite_rx.exception import ZAPSetupError
 from tornado import ioloop
@@ -19,11 +20,7 @@ from zmq.eventloop import zmqstream
 
 
 PARENT_DIR = os.path.dirname(__file__)
-logging.config.fileConfig(
-    os.path.join(
-        PARENT_DIR,
-        "logging.conf"),
-    disable_existing_loggers=False)
+logging.config.dictConfig(DEFAULT_LOGGING)
 
 LOG = logging.getLogger(__name__)
 
