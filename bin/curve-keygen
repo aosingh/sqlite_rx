@@ -5,22 +5,25 @@
     Implementation idea borrowed from : https://github.com/danielrobbins/ibm-dw-zeromq-2/blob/master/curve-keygen
 
 """
+import argparse
+import logging
+import socket
+import sys
 
 import zmq.auth
-import argparse
-import socket
-
-
-from sqlite_rx.utils import setup_logger
 from sqlite_rx.auth import KeyGenerator
 
-LOG = setup_logger(__file__)
+
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+
+LOG = logging.getLogger(__name__)
 
 
 def main():
     if zmq.zmq_version_info() < (4, 0):
         raise RuntimeError(
-            "Security is not supported in libzmq version < 4.0. libzmq version {0}".format(zmq.zmq_version()))
+            "Security is not supported in libzmq version < 4.0. libzmq version {0}".format(
+                zmq.zmq_version()))
     mode = "client"
     parser = argparse.ArgumentParser()
     parser.add_argument("--mode", default=mode, help="`client` or `server`")

@@ -1,12 +1,15 @@
 from os import path
-from setuptools import setup, find_packages
+
+from setuptools import find_packages, setup
+from sqlite_rx import __version__
+
 
 this_directory = path.abspath(path.dirname(__file__))
 
 with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
-VERSION = '0.9.91'
+VERSION = __version__
 DISTNAME = 'sqlite_rx'
 LICENSE = 'GNU GPLv3'
 AUTHOR = 'Abhishek Singh'

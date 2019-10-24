@@ -1,32 +1,31 @@
 
-class Error(Exception):
+class SQLiteRxError(Exception):
     pass
 
 
-class InvalidAuthConfig(Error):
+class InvalidAuthConfig(SQLiteRxError):
     pass
 
 
-class ZAPSetupError(Error):
+class ZAPSetupError(SQLiteRxError):
     pass
 
 
-class MissingServerCurveKeyID(Error):
+class MissingServerCurveKeyID(SQLiteRxError):
     pass
 
 
-class InvalidRequest(Error):
+class InvalidRequest(SQLiteRxError):
     pass
 
 
-class RequestSendError(Error):
+class RequestSendError(SQLiteRxError):
     pass
 
 
-class SerializationError(Error):
+class SerializationError(SQLiteRxError):
     pass
 
 
-class RequestCompressionError(Error):
+class RequestCompressionError(SQLiteRxError):
     pass
-

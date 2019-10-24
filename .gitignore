@@ -5,3 +5,4 @@ sqlite_rx.egg-info/
 cover/
 build/
 dist/
+.coverage

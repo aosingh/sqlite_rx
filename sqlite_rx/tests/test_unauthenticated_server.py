@@ -1,7 +1,7 @@
 import unittest
 
-from sqlite_rx.server import SQLiteServer
 from sqlite_rx.client import SQLiteClient
+from sqlite_rx.server import SQLiteServer
 
 
 class TestUnAuthenticatedServer(unittest.TestCase):
@@ -21,49 +21,51 @@ class TestUnAuthenticatedServer(unittest.TestCase):
 
     def test_table_creation(self):
         result = self.client.execute(
-            '''CREATE TABLE stocks (date text, trans text, symbol text, qty real, price real)''')
+            'CREATE TABLE stocks (date text, trans text, symbol text, qty real, price real)')
         expected_result = {"error": None, 'items': []}
         self.assertDictEqual(result, expected_result)
 
     def test_table_rows_insertion(self):
         purchases = [('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
-                             ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
-                             ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
-                             ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
-                             ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
-                             ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
-                             ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
-                             ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
-                             ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
-                             ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
-                             ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
-                             ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
-                             ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
-                             ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
-                             ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
-                             ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
-                             ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
-                             ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
-                             ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
-                             ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
-                             ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
-                             ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
-                             ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
-                             ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
-                             ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
-                             ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
-                             ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
-                             ]
+                     ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
+                     ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
+                     ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
+                     ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
+                     ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
+                     ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
+                     ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
+                     ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
+                     ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
+                     ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
+                     ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
+                     ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
+                     ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
+                     ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
+                     ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
+                     ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
+                     ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
+                     ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
+                     ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
+                     ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
+                     ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
+                     ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
+                     ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
+                     ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
+                     ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
+                     ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
+                     ]
 
-        result = self.client.execute('INSERT INTO stocks VALUES (?,?,?,?,?)', *purchases, execute_many=True)
+        result = self.client.execute(
+            'INSERT INTO stocks VALUES (?,?,?,?,?)',
+            *purchases,
+            execute_many=True)
         expected_result = {'error': None, 'items': [], 'row_count': 27}
         self.assertDictEqual(result, expected_result)
 
     def test_table_not_present(self):
-        result = self.client.execute('''SELECT * FROM IDOLS''')
+        result = self.client.execute('SELECT * FROM IDOLS')
         self.assertIsInstance(result, dict)
 
 
 if __name__ == "__main__":
     unittest.main()
-

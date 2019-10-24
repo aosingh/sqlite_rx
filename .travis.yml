@@ -6,8 +6,8 @@ os:
   - linux
 python:
   - "3.7"
+  - "3.8"
 script:
-  - pip install future
   - pip install nose
   - pip install coverage
   - pip install coveralls
