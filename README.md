@@ -16,9 +16,6 @@ Key Features
 - Allows the users to define a generic authorization policy during server startup
 
 
-***Please note that detailed documentation(explaining the configuration options) for both Client and Server is in-progress. 
-Below you can find the steps to quickly get started***
-
 
 # Install
 
@@ -271,6 +268,9 @@ You can define your own authorization policy in a python dictionary(as shown abo
 as `auth_config` parameter.
 It is recommended you **do not** override the `SQLITE_PRAGMA` action as the database starts in `pragma journal_mode=wal` mode 
 
+## Secure Client and Server Setup
+
+Please read the [link](https://github.com/aosingh/sqlite_rx/wiki/Secure-Client-Server-Setup) for a detailed explanation on how to setup a secure client/server communication.
 
 
 
