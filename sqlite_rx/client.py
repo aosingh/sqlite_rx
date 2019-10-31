@@ -29,10 +29,6 @@ LOG = logging.getLogger(__name__)
 
 
 class SQLiteClient(threading.local):
-    """
-    A thin & reliable SQLLite Client implemented using ZeroMQ REQ socket and Lazy pirate pattern.
-
-    """
 
     def __init__(self,
                  connect_address: str,
@@ -41,6 +37,20 @@ class SQLiteClient(threading.local):
                  client_curve_id: str = None,
                  server_curve_id: str = None,
                  context=None):
+        """
+        A thin and reliable client to send query execution requests to a remote :class: `sqlite_rx.server.SQLiteServer`
+
+        The SQLiteClient has a single method called execute().
+
+        Args:
+            connect_address: The address and port on which the server will listen for client requests.
+            use_encryption: True means use `CurveZMQ` encryption. False means don't
+            curve_dir: Curve key files directory. Defaults to `~/.curve`
+            client_curve_id: Server curve id. Defaults to "id_server_{}_curve".format(socket.gethostname())
+            server_curve_id: Client curve id. Defaults to "id_client_{}_curve".format(socket.gethostname())
+            context: `zmq.Context`
+
+        """
         self.client_id = "python@{}_{}".format(
             socket.gethostname(), threading.get_ident())
         self._context = context or zmq.Context.instance()
@@ -67,7 +77,33 @@ class SQLiteClient(threading.local):
         LOG.info("client %s connected successfully" % self.client_id)
         return client
 
-    def execute(self, query, *args, **kwargs):
+    def execute(self,
+                query: str,
+                *args,
+                **kwargs):
+        """
+        Send the `query` and the parameters to a remote SQLiteServer instance which will then
+        execute the query.
+
+        Important keyword arguments are as follows:
+
+            1. `execute_many`: True if you want to insert multiple rows with one execute call.
+
+            2. `execute_script`: True if you want to execute a script with multiple SQL commands.
+
+            3. `request_timeout`: Time in ms to wait for a response before retrying. Default is 2500 ms
+
+            4. `retries`: Number of times to retry before abandoning the request. Default is 5
+
+        Args:
+            query: A valid SQL query or SQL script
+
+        Raises:
+            sqlite_rx.exception.RequestSendError: An error at the Transport layer i.e. zmq socket
+            sqlite_rx.exception.RequestCompressionError: An error while compressing the request body using `zlib`
+            sqlite_rx.exception.SerializationError: An error while serializing the request body using `msgpack`
+
+        """
         LOG.info("Executing query %s for client %s" % (query, self.client_id))
 
         request_retries = kwargs.pop('retries', REQUEST_RETRIES)

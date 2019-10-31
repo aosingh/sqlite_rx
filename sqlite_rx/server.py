@@ -7,7 +7,7 @@ import sys
 import traceback
 import zlib
 from pprint import pformat
-from typing import List, Union
+from typing import List, Union, Callable
 
 import msgpack
 import zmq
@@ -26,42 +26,62 @@ LOG = logging.getLogger(__name__)
 
 
 class SQLiteZMQProcess(multiprocessing.Process):
-    """
-    This is the base class for all processes and offers utility functions
-    for setup and creating new streams
-    """
 
     def __init__(self, *args, **kwargs):
+        """The :class: ``sqlite_rx.server.SQLiteServer`` is intended to run as an isolated process.
+        This class represents some of the abstractions for isolated server process
+
+        """
         self.context = None
         self.loop = None
         self.socket = None
+        self.auth = None
         super(SQLiteZMQProcess, self).__init__(*args, **kwargs)
 
-    def info(self, message):
+    @staticmethod
+    def info(message):
         LOG.info(message)
 
-    def debug(self, message):
+    @staticmethod
+    def debug(message):
         LOG.debug(message)
 
-    def log_exception(self, message):
+    @staticmethod
+    def log_exception(message):
         LOG.exception(message)
 
     def setup(self):
-        """
-        Creates a `context` and an event `loop` for the process
-        :return:
+        """Creates a ZMQ `context` and a Tornado `eventloop` for the SQLiteServer process
         """
         self.context = zmq.Context()
         self.loop = ioloop.IOLoop.instance()
 
     def stream(self,
                sock_type,
-               address,
-               callback=None,
+               address: str,
+               callback: Callable = None,
                use_encryption: bool = False,
-               server_curve_id=None,
-               curve_dir=None,
+               server_curve_id: str = None,
+               curve_dir: str = None,
                use_zap: bool = False):
+        """
+
+        Method used to setup a ZMQ stream which will be bound to a ZMQ.REP socket.
+        On this REP stream we register a callback to execute client queries as they arrive.
+        The stream is used in conjunction with `tornado` eventloop
+
+        Args:
+            sock_type: ZMQ Socket type. For e.g. zmq.REP
+            address: Address to bind to
+            callback: A callback to invoke as messages arrive on the ZMQ stream
+            use_encryption: True if you want CurveZMQ encryption to be enabled
+            server_curve_id: Server curve id. Defaults to "id_server_{}_curve".format(socket.gethostname())
+            curve_dir: Curve key files directory. Defaults to `~/.curve`
+            use_zap: True if you want ZAP authentication to be enabled.
+
+        Raises:
+            sqlite_rx.exception.ZAPSetupError: If ZAP is enabled without CurveZMQ
+        """
 
         self.socket = self.context.socket(sock_type)
 
@@ -112,16 +132,15 @@ class SQLiteServer(SQLiteZMQProcess):
                  use_zap_auth: bool = False,
                  *args, **kwargs):
         """
-        Description:
-            Initialization sequence to start an SQLite Server.
+        SQLiteServer runs as an isolated python process.
 
-        Params:
-            bind_address (str): The address and port on which the server will listen for client requests.
+        Args:
+            bind_address : The address and port on which the server will listen for client requests.
             database: A path like object or the string ":memory:" for in-memory database.
             context: The ZMQ context
-            auth_config (dict): A dictionary describing what actions are authorized, denied or ignored.
-            use_encryption (bool): True means use `curveZMQ`. False means don't
-            use_zap_auth (bool): True means use `ZAP`. False means don't
+            auth_config : A dictionary describing what actions are authorized, denied or ignored.
+            use_encryption : True means use `CurveZMQ` encryption. False means don't
+            use_zap_auth : True means use `ZAP` authentication. False means don't
 
         """
         self._bind_address = bind_address
@@ -135,14 +154,20 @@ class SQLiteServer(SQLiteZMQProcess):
         super(SQLiteServer, self).__init__(*args, *kwargs)
 
     def setup(self):
+        """
+        Start a zmq.REP socket stream and register a callback :class: `sqlite_rx.server.QueryStreamHandler`
+
+        """
         super().setup()
-        # GET A SECURE STREAM OR A NORMAL PLAIN STREAM
+
+        # Depending on the initialization parameters either get a plain stream or secure stream.
         self.rep_stream = self.stream(zmq.REP,
                                       self._bind_address,
                                       use_encryption=self._encrypt,
                                       use_zap=self._zap_auth,
                                       server_curve_id=self.server_curve_id,
                                       curve_dir=self.curve_dir)
+        # Register the callback.
         self.rep_stream.on_recv(QueryStreamHandler(self.rep_stream,
                                                    self._database,
                                                    self._auth_config))
@@ -163,6 +188,15 @@ class QueryStreamHandler:
                  rep_stream,
                  database: Union[bytes, str],
                  auth_config: dict = None):
+        """
+        Executes SQL queries and send results back on the `zmq.REP` stream
+
+        Args:
+             rep_stream: The zmq.REP socket stream on which to send replies.
+             database: A path like object or the string ":memory:" for in-memory database.
+             auth_config: A dictionary describing what actions are authorized, denied or ignored.
+
+        """
         self._connection = sqlite3.connect(database=database,
                                            isolation_level=None,
                                            check_same_thread=False)
@@ -229,7 +263,7 @@ class QueryStreamHandler:
             for row in self._cursor.fetchall():
                 result['items'].append(row)
             return zlib.compress(msgpack.dumps(result))
-        except BaseException:
+        except Exception:
             LOG.exception("Exception while collecting rows")
             result['error'] = self.capture_exception()
             return zlib.compress(msgpack.dumps(result))
