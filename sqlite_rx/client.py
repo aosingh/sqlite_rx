@@ -80,7 +80,7 @@ class SQLiteClient(threading.local):
     def execute(self,
                 query: str,
                 *args,
-                **kwargs):
+                **kwargs) -> dict:
         """
         Send the `query` and the parameters to a remote SQLiteServer instance which will then
         execute the query.
@@ -97,6 +97,13 @@ class SQLiteClient(threading.local):
 
         Args:
             query: A valid SQL query or SQL script
+
+        Returns:
+            response: A dictionary of the form
+            {
+                "items": []
+                "error": None
+            }
 
         Raises:
             sqlite_rx.exception.RequestSendError: An error at the Transport layer i.e. zmq socket
