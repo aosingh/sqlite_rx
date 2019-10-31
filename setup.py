@@ -33,7 +33,7 @@ classifiers = [
     'Operating System :: POSIX :: Linux',
     'Operating System :: Unix',
     'Operating System :: Microsoft :: Windows',
-    'Topic :: Database :: Database Engines/Servers'
+    'Topic :: Database :: Database Engines/Servers',
     'Operating System :: MacOS'
 ]
 keywords = 'sqlite client server'
