@@ -9,6 +9,6 @@ script:
   - pip install coverage
   - pip install coveralls
   - python setup.py nosetests --with-coverage
-  - coverage run -m unittest discover -s lexpy/tests
+  - coverage run -m unittest discover -s sqlite_rx/tests
   - coverage report -i -m
   - coveralls
