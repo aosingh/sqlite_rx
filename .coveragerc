@@ -1,5 +1,6 @@
 [run]
 branch = False
+parallel = True
 
 source =
     sqlite_rx
