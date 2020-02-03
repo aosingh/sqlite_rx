@@ -23,7 +23,7 @@ REQUEST_RETRIES = 5
 
 
 PARENT_DIR = os.path.dirname(__file__)
-logging.config.dictConfig(get_default_logger_settings(level="DEBUG"))
+logging.config.dictConfig(get_default_logger_settings(level="INFO"))
 
 LOG = logging.getLogger(__name__)
 
