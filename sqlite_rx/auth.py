@@ -11,6 +11,7 @@ from sqlite_rx.exception import InvalidAuthConfig
 
 LOG = logging.getLogger(__name__)
 
+__all__ = ['Authorizer', 'KeyGenerator', 'KeyMonkey', 'DEFAULT_AUTH_CONFIG']
 
 # Default Authorization Config
 DEFAULT_AUTH_CONFIG = {

@@ -1,4 +1,3 @@
-colorlog
 msgpack-python
 pyzmq
 tornado
