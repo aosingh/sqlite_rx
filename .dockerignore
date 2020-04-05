@@ -7,3 +7,4 @@ cover
 dist
 sqlite_rx.egg-info
 .coveragerc
+docker_examples
