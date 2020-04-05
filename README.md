@@ -320,8 +320,12 @@ This link also explains how to setup CurveZMQ encryption and ZAP authentication
 
 # Docker Examples
 
+The following `docker-compose` examples using the docker image `aosing/sqlite_rx`
+
+`sqlite-server` CLI is used in all the docker examples
 
 ## In-memory SQLite Database
+
 ```yaml
 version: "3"
 services:
@@ -334,6 +338,8 @@ services:
 ```
 
 ## On Disk SQLite Database
+
+docker volume is used to persist the database file on the host's file system
 
 ```yaml
 
@@ -352,8 +358,20 @@ volumes:
   data: {}
 ```
 
+- Named docker volume `data` is mounted to `/data` location in the container
+- `sqlite-server` CLI accepts `--database` option which is the database path in the container. 
+Form is `/data/<dbname>.db`
+
 
 ## SQLite Database server with CurveZMQ encryption
+
+CurveZMQ is a protocol for secure messaging across the Internet that closely follows the CurveCP security handshake. `curve-keygen` is a script (packaged with sqlite_rx) which is modeled after `ssh-keygen` to generate public and private keys.
+Curve Key Generation uses an OpenSSH like directory: `~/.curve`
+
+We need public keys for both servers and clients. We differentiate this by running the `curve-keygen` script in either client or server mode.
+
+Once the keys have been generated, we can enable `CurveZMQ` encryption in the following 
+way
 
 ```yaml
 
@@ -373,7 +391,18 @@ volumes:
   data: {}
 ```
 
+- `sqlite-server` CLI accepts `--curvezmq` boolean flag to enable encryption
+- `sqlite-server` CLI accepts `--key-id` which is the server key id available at `/root/.curve` location
+- `/Users/as/.curve` (on host machine) is mapped to `/root/.curve` in the docker container. 
+
+
 ## SQLite Database server with CurveZMQ encryption and ZAP authentication
+
+ZeroMQ Authentication protocol
+
+Setting `--zap = True` will restrict connections to clients whose public keys are in the `/root/.curve/authorized_clients/` directory. Set this to `False` to allow any client with the server's
+public key to connect, without requiring the server to possess each client's public key.
+
 
 ```yaml
 
