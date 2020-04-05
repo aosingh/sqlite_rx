@@ -307,4 +307,4 @@ Options:
   --help                          Show this message and exit.
 ```
 
-All docker [examples]((https://hub.docker.com/r/aosingh/sqlite_rx)) use this console script as an entrypoint
+All docker [examples](https://hub.docker.com/r/aosingh/sqlite_rx) use this console script as an entrypoint
