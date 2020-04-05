@@ -32,6 +32,8 @@ pip install sqlite_rx
 `SQLiteServer` runs in a single thread and follows an event-driven concurrency model (using `tornado's` event loop) which minimizes the cost of concurrent client connections.
 
 ```python
+import logging.config
+from sqlite_rx import get_default_logger_settings
 from sqlite_rx.server import SQLiteServer
 
 
@@ -42,7 +44,8 @@ def main():
     
     # You can use ":memory:" to open a database connection to a database 
     # that resides in RAM instead of on disk
-    
+
+    logging.config.dictConfig(get_default_logger_settings(logging.DEBUG))
     server = SQLiteServer(database=":memory:",
                           bind_address="tcp://127.0.0.1:5000")
     try:
@@ -77,7 +80,14 @@ Below are a few examples
 ### Instantiate a client
 
 ```python
+import logging.config
 from sqlite_rx.client import SQLiteClient
+from sqlite_rx import get_default_logger_settings
+
+# sqlite_rx comes with a default logger settings. You could use as below.
+logging.config.dictConfig(get_default_logger_settings(logging.DEBUG))
+
+
 client = SQLiteClient(connect_address="tcp://127.0.0.1:5000")
 ```
 
