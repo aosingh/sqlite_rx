@@ -54,6 +54,8 @@ def main():
 if __name__ == '__main__':
     main()
 ```
+### Docker
+To run `SQLiteServer` in a docker container refer the detailed [documentation](https://hub.docker.com/r/aosingh/sqlite_rx) on Docker hub
 
 ## Client
 
@@ -274,7 +276,7 @@ Please read the [link](https://github.com/aosingh/sqlite_rx/wiki/Secure-Client-S
 
 ## Docker
 
-To run `SQLiteServer` in a docker container refer Docker hub [documentation](https://hub.docker.com/r/aosingh/sqlite_rx)
+To run `SQLiteServer` in a docker container refer the detailed [documentation](https://hub.docker.com/r/aosingh/sqlite_rx) on Docker hub
 
 ## CLI
 
