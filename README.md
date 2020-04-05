@@ -57,8 +57,7 @@ def main():
 if __name__ == '__main__':
     main()
 ```
-### Docker
-To run `SQLiteServer` in a docker container refer the detailed [documentation](https://hub.docker.com/r/aosingh/sqlite_rx) on Docker hub
+
 
 ## Client
 
@@ -280,15 +279,8 @@ You can define your own authorization policy in a python dictionary(as shown abo
 as `auth_config` parameter.
 It is recommended you **do not** override the `SQLITE_PRAGMA` action as the database starts in `pragma journal_mode=wal` mode 
 
-## Secure Client and Server Setup
 
-Please read the [link](https://github.com/aosingh/sqlite_rx/wiki/Secure-Client-Server-Setup) for a detailed explanation on how to setup a secure client/server communication.
-
-## Docker
-
-To run `SQLiteServer` in a docker container refer the detailed [documentation](https://hub.docker.com/r/aosingh/sqlite_rx) on Docker hub
-
-## CLI
+# CLI
 
 `sqlite-server` is a console script to start an SQLiteServer.
 
@@ -319,4 +311,85 @@ Options:
   --help                          Show this message and exit.
 ```
 
-All docker [examples](https://hub.docker.com/r/aosingh/sqlite_rx) use this console script as an entrypoint
+All docker examples use this console script as an entrypoint
+
+# Secure Client and Server Setup
+
+Please read the [link](https://github.com/aosingh/sqlite_rx/wiki/Secure-Client-Server-Setup) for a detailed explanation on how to setup a secure client/server communication.
+This link also explains how to setup CurveZMQ encryption and ZAP authentication
+
+# Docker Examples
+
+
+## In-memory SQLite Database
+```yaml
+version: "3"
+services:
+  sqlite_server:
+    image: aosingh/sqlite_rx
+    command: sqlite-server --log-level DEBUG
+    ports:
+    - 5000:5000
+
+```
+
+## On Disk SQLite Database
+
+```yaml
+
+version: "3"
+services:
+
+  sqlite_server:
+    image: aosingh/sqlite_rx
+    command: sqlite-server --log-level DEBUG --database /data/database.db
+    ports:
+      - 5000:5000
+    volumes:
+      - data:/data
+
+volumes:
+  data: {}
+```
+
+
+## SQLite Database server with CurveZMQ encryption
+
+```yaml
+
+version: "3"
+services:
+
+  sqlite_server:
+    image: aosingh/sqlite_rx
+    command: sqlite-server --curvezmq --log-level DEBUG --database /data/database.db --key-id id_server_Abhisheks-MacBook-Pro.local_curve
+    ports:
+      - 5000:5000
+    volumes:
+      - data:/data
+      - /Users/as/.curve:/root/.curve
+
+volumes:
+  data: {}
+```
+
+## SQLite Database server with CurveZMQ encryption and ZAP authentication
+
+```yaml
+
+version: "3"
+services:
+
+  sqlite_server:
+    image: aosingh/sqlite_rx
+    command: sqlite-server --zap --curvezmq --log-level DEBUG --database /data/database.db --key-id id_server_Abhisheks-MacBook-Pro.local_curve
+    ports:
+    - 5000:5000
+    volumes:
+    - data:/data
+    - /Users/as/.curve:/root/.curve
+
+volumes:
+  data: {}
+```
+
