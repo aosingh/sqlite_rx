@@ -272,5 +272,39 @@ It is recommended you **do not** override the `SQLITE_PRAGMA` action as the data
 
 Please read the [link](https://github.com/aosingh/sqlite_rx/wiki/Secure-Client-Server-Setup) for a detailed explanation on how to setup a secure client/server communication.
 
+## Docker
 
+To run `SQLiteServer` in a docker container refer Docker hub [documentation](https://hub.docker.com/r/aosingh/sqlite_rx)
 
+## CLI
+
+`sqlite-server` is a console script to start an SQLiteServer.
+
+```bash
+Usage: sqlite-server [OPTIONS]
+
+Options:
+  --log-level [CRITICAL|FATAL|ERROR|WARN|WARNING|INFO|DEBUG|NOTSET]
+                                  Logging level  [default: INFO]
+  --advertise-host TEXT           Host address on which to run the
+                                  SQLiteServer  [default: 0.0.0.0]
+
+  --port TEXT                     Port on which SQLiteServer will listen for
+                                  connection requests  [default: 5000]
+
+  --database TEXT                 Path like object giving the database name.
+                                  You can use `:memory:` for an in-memory
+                                  database  [default: :memory:]
+
+  --zap / --no-zap                True, if you want to enable ZAP
+                                  authentication  [default: False]
+
+  --curvezmq / --no-curvezmq      True, if you want to enable CurveZMQ
+                                  encryption  [default: False]
+
+  --curve-dir TEXT                Curve Key directory
+  --key-id TEXT                   Server key ID
+  --help                          Show this message and exit.
+```
+
+All docker [examples]((https://hub.docker.com/r/aosingh/sqlite_rx)) use this console script as an entrypoint

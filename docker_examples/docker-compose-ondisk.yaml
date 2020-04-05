@@ -1,0 +1,13 @@
+version: "3"
+services:
+
+  sqlite_server:
+    image: aosingh/sqlite_rx
+    command: sqlite-server --log-level DEBUG --database /data/database.db
+    ports:
+      - 5000:5000
+    volumes:
+      - data:/data
+
+volumes:
+  data: {}

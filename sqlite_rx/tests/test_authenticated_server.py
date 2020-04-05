@@ -1,3 +1,4 @@
+import logging.config
 import os
 import shutil
 import socket
@@ -5,10 +6,12 @@ import tempfile
 import unittest
 from contextlib import contextmanager
 
+from sqlite_rx import get_default_logger_settings
 from sqlite_rx.auth import KeyGenerator
 from sqlite_rx.client import SQLiteClient
 from sqlite_rx.server import SQLiteServer
 
+logging.config.dictConfig(get_default_logger_settings(level="DEBUG"))
 
 @contextmanager
 def get_server_auth_files():

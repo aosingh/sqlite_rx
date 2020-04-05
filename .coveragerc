@@ -8,6 +8,7 @@ source =
 omit =
     /*/tests/*
     .env/*
+    /sqlite_rx/cli
     /home/travis/virtualenv/*
 
 [report]

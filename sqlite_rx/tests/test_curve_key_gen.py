@@ -1,9 +1,13 @@
+import logging.config
 import os
 import socket
 import tempfile
 import unittest
 
+from sqlite_rx import get_default_logger_settings
 from sqlite_rx.auth import KeyGenerator
+
+logging.config.dictConfig(get_default_logger_settings(level="DEBUG"))
 
 
 class TestKeyFileGeneration(unittest.TestCase):
@@ -22,4 +26,5 @@ class TestKeyFileGeneration(unittest.TestCase):
 
 
 if __name__ == '__main__':
+
     unittest.main()

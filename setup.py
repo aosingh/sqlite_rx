@@ -52,6 +52,11 @@ setup(
     url=URL,
     version=VERSION,
     scripts=['bin/curve-keygen'],
+    entry_points = {
+      'console_scripts': [
+          'sqlite-server=sqlite_rx.cli:main'
+      ]
+    },
     packages=find_packages(exclude=("tests",)),
     package_dir={'sqlite_rx': 'sqlite_rx'},
     install_requires=DEPENDENCIES,

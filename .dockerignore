@@ -1,0 +1,9 @@
+.travis.yml
+.git
+.venv
+.idea
+build
+cover
+dist
+sqlite_rx.egg-info
+.coveragerc

@@ -1,7 +1,11 @@
+import logging.config
 import unittest
 
+from sqlite_rx import get_default_logger_settings
 from sqlite_rx.client import SQLiteClient
 from sqlite_rx.server import SQLiteServer
+
+logging.config.dictConfig(get_default_logger_settings(level="DEBUG"))
 
 
 class TestUnAuthenticatedServer(unittest.TestCase):

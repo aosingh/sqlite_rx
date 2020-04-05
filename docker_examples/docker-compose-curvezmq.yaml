@@ -1,0 +1,14 @@
+version: "3"
+services:
+
+  sqlite_server:
+    image: aosingh/sqlite_rx
+    command: sqlite-server --curvezmq --log-level DEBUG --database /data/database.db --key-id id_server_Abhisheks-MacBook-Pro.local_curve
+    ports:
+      - 5000:5000
+    volumes:
+      - data:/data
+      - /Users/as/.curve:/root/.curve
+
+volumes:
+  data: {}

@@ -1,4 +1,4 @@
-__version__ = "0.9.95"
+__version__ = "0.9.96"
 __author__ = "Abhishek Singh"
 __authoremail__ = "aosingh@asu.edu"
 
@@ -11,7 +11,7 @@ def get_default_logger_settings(level: str = "DEBUG"):
         'formatters': {
             'standard': {
                 '()': 'logging.Formatter',
-                'format': '%(asctime)s - %(levelname)-8s %(filename)s:%(lineno)s %(message)s'
+                'format': '%(asctime)s - %(levelname)s - [%(name)s:%(funcName)s:%(lineno)d] %(message)s'
             },
         },
         'handlers': {
