@@ -29,6 +29,9 @@ pip install sqlite_rx
 
 ## Server
 
+Following are the options to start an `SQLiteServer`
+
+### Python API
 `SQLiteServer` runs in a single thread and follows an event-driven concurrency model (using `tornado's` event loop) which minimizes the cost of concurrent client connections.
 
 ```python
@@ -57,6 +60,14 @@ def main():
 if __name__ == '__main__':
     main()
 ```
+
+### CLI to start a server
+
+Refer [CLI](#cli)
+
+### Docker
+
+Refer [Docker Examples](#docker-examples)
 
 
 ## Client
@@ -320,7 +331,9 @@ This link also explains how to setup CurveZMQ encryption and ZAP authentication
 
 # Docker Examples
 
-The following `docker-compose` examples using the docker image `aosing/sqlite_rx`
+The following `docker-compose` examples using the docker image [`aosingh/sqlite_rx`](https://hub.docker.com/r/aosingh/sqlite_rx)
+
+
 
 `sqlite-server` CLI is used in all the docker examples
 
@@ -336,6 +349,8 @@ services:
     - 5000:5000
 
 ```
+
+- Note that in the docker container the server listens on port `5000` so, do enable port forwarding on the host machine
 
 ## On Disk SQLite Database
 
