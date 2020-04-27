@@ -2,8 +2,10 @@ language: python
 os:
   - linux
 python:
+  - "3.6"
   - "3.7"
   - "3.8"
+  - "pypy3"
 script:
   - pip install nose
   - pip install coverage

@@ -1,4 +1,4 @@
-__version__ = "0.9.97"
+__version__ = "0.9.98"
 __author__ = "Abhishek Singh"
 __authoremail__ = "aosingh@asu.edu"
 

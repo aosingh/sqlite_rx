@@ -1,6 +1,7 @@
 import logging.config
 
 import click
+import platform
 
 from pprint import pformat
 
@@ -28,6 +29,7 @@ def main(log_level,
          curve_dir,
          key_id):
     logging.config.dictConfig(get_default_logger_settings(level=log_level))
+    LOG.info("Python Platform %s" % platform.python_implementation())
     kwargs = {
         'bind_address': f'tcp://{advertise_host}:{port}',
         'database': database,
