@@ -1,5 +1,6 @@
 import logging.config
 import os
+import platform
 import shutil
 import socket
 import tempfile
@@ -12,6 +13,11 @@ from sqlite_rx.client import SQLiteClient
 from sqlite_rx.server import SQLiteServer
 
 logging.config.dictConfig(get_default_logger_settings(level="DEBUG"))
+
+sqlite_error_prefix = "sqlite3.OperationalError"
+
+if platform.python_implementation() == "PyPy":
+    sqlite_error_prefix = "_sqlite3.OperationalError"
 
 @contextmanager
 def get_server_auth_files():
@@ -66,8 +72,8 @@ class TestAuthenticatedConnection(unittest.TestCase):
             expected_result = {
                 'items': [],
                 'error': {
-                    'message': 'sqlite3.OperationalError: no such table: IDOLS',
-                    'type': 'sqlite3.OperationalError'}}
+                    'message': '{0}: no such table: IDOLS'.format(sqlite_error_prefix),
+                    'type': '{0}'.format(sqlite_error_prefix)}}
             self.assertIsInstance(result, dict)
             self.assertDictEqual(result, expected_result)
 
@@ -110,8 +116,8 @@ class TestAuthenticatedConnection(unittest.TestCase):
             expected_result = {
                 'items': [],
                 'error': {
-                    'message': 'sqlite3.OperationalError: no such table: IDOLS',
-                    'type': 'sqlite3.OperationalError'}}
+                    'message': '{0}: no such table: IDOLS'.format(sqlite_error_prefix),
+                    'type': '{0}'.format(sqlite_error_prefix)}}
             self.assertIsInstance(result, dict)
             self.assertDictEqual(result, expected_result)
 
