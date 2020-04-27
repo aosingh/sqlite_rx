@@ -1,10 +1,11 @@
-FROM alpine:edge
+FROM pypy:3-slim
 
-RUN apk update && apk add build-base libzmq musl-dev python3 python3-dev zeromq-dev py-pip
+RUN apt-get update
+RUN apt-get -y install g++
+RUN apt-get -y install libzmq3-dev
 
 COPY . /sqlite_rx
 WORKDIR /sqlite_rx
 
-RUN pip install -U Cython
-RUN pip install -r requirements.txt
-RUN pip install -e .
+RUN pypy3 -m pip install -r requirements.txt
+RUN pypy3 setup.py install

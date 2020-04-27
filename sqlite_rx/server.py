@@ -55,7 +55,7 @@ class SQLiteZMQProcess(multiprocessing.Process):
         """Creates a ZMQ `context` and a Tornado `eventloop` for the SQLiteServer process
         """
         self.context = zmq.Context()
-        self.loop = ioloop.IOLoop.instance()
+        self.loop = ioloop.IOLoop(make_current=False)
 
     def stream(self,
                sock_type,
