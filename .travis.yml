@@ -1,6 +1,9 @@
 language: python
 os:
   - linux
+before_install:
+  - export COVERAGE_PROCESS_START="${TRAVIS_BUILD_DIR}/.coveragerc"
+  - export PATH="$PWD/.travis:$PATH"
 python:
   - "3.6"
   - "3.7"
@@ -10,10 +13,7 @@ script:
   - pip install nose
   - pip install coverage
   - pip install coveralls
-  - python -m site
-  - echo ${TRAVIS_BUILD_DIR}
-  - ls -art ${TRAVIS_BUILD_DIR}
-  - ls -lrt ${TRAVIS_BUILD_DIR}
+  - cp "${TRAVIS_BUILD_DIR}/.travis/sitecustomize.py" ./lib/python
   - python setup.py nosetests --with-coverage
   - coverage run --concurrency=multiprocessing -m unittest discover -s sqlite_rx/tests
   - coverage combine
