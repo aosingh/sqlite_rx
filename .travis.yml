@@ -13,6 +13,8 @@ script:
   - pip install nose
   - pip install coverage
   - pip install coveralls
+  - echo $PATH
+  - echo $PYTHONPATH
   - cp "${TRAVIS_BUILD_DIR}/.travis/sitecustomize.py" ./lib/python
   - python setup.py nosetests --with-coverage
   - coverage run --concurrency=multiprocessing -m unittest discover -s sqlite_rx/tests
