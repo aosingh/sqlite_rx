@@ -1,7 +1,6 @@
 [run]
 parallel = True
 branch = False
-concurrency = multiprocessing
 source = sqlite_rx
 omit =
     /*/tests/*
