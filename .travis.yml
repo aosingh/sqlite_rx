@@ -1,23 +1,36 @@
 language: python
+matrix:
+  include:
+    - os: linux
+      python: 3.6
+      env:
+        - SITECUSTOMIZELIBPATH="/home/travis/virtualenv/python3.6/lib/python3.6/sitecustomize.py"
+    - os: linux
+      python: 3.7
+      env:
+        - SITECUSTOMIZELIBPATH="/home/travis/virtualenv/python3.7/lib/python3.7/sitecustomize.py"
+    - os: linux
+      python: 3.8
+      env:
+        - SITECUSTOMIZELIBPATH="/home/travis/virtualenv/python3.8/lib/python3.8/sitecustomize.py"
+    - os: linux
+      python: pypy3
+      env:
+        - SITECUSTOMIZELIBPATH="/home/travis/virtualenv/python3.8/lib/python3.8/sitecustomize.py"
+
 os:
   - linux
 before_install:
   - export COVERAGE_PROCESS_START="${TRAVIS_BUILD_DIR}/.coveragerc"
   - export PATH="$PWD/.travis:$PATH"
-python:
-  - "3.6"
-  - "3.7"
-  - "3.8"
-  - "pypy3"
 script:
   - pip install nose
   - pip install coverage
   - pip install coveralls
   - echo $PATH
-  - echo $PYTHONPATH
-  - cp "${TRAVIS_BUILD_DIR}/.travis/sitecustomize.py" ./lib/python
+  - ls -lrt /home/travis/virtualenv
   - python setup.py nosetests --with-coverage
   - coverage run --concurrency=multiprocessing -m unittest discover -s sqlite_rx/tests
-  - coverage combine
+  - coverage combine --apppend
   - coverage report -i -m
   - coveralls
