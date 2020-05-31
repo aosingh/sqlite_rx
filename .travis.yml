@@ -12,6 +12,7 @@ script:
   - pip install coveralls
   - python -m site
   - echo ${TRAVIS_BUILD_DIR}
+  - ls -lrt ${TRAVIS_BUILD_DIR}/.travis
   - python setup.py nosetests --with-coverage
   - coverage run --concurrency=multiprocessing -m unittest discover -s sqlite_rx/tests
   - coverage combine
