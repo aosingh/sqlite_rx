@@ -11,9 +11,8 @@ from typing import List, Union, Callable
 
 import msgpack
 import zmq
-from sqlite_rx import get_default_logger_settings
 from sqlite_rx.auth import Authorizer, KeyMonkey
-from sqlite_rx.exception import ZAPSetupError
+from sqlite_rx.exception import SQLiteRxZAPSetupError
 from tornado import ioloop
 from zmq.auth.ioloop import IOLoopAuthenticator
 from zmq.eventloop import zmqstream
@@ -39,24 +38,11 @@ class SQLiteZMQProcess(multiprocessing.Process):
         self.auth = None
         super(SQLiteZMQProcess, self).__init__(*args, **kwargs)
 
-    @staticmethod
-    def info(message):
-        LOG.info(message)
-
-    @staticmethod
-    def debug(message):
-        LOG.debug(message)
-
-    @staticmethod
-    def log_exception(message):
-        LOG.exception(message)
-
     def setup(self):
         """Creates a ZMQ `context` and a Tornado `eventloop` for the SQLiteServer process
         """
         self.context = zmq.Context()
         self.loop = ioloop.IOLoop()
-        # self.loop = ioloop.IOLoop.instance()
 
     def stream(self,
                sock_type,
@@ -82,7 +68,7 @@ class SQLiteZMQProcess(multiprocessing.Process):
             use_zap: True if you want ZAP authentication to be enabled.
 
         Raises:
-            sqlite_rx.exception.ZAPSetupError: If ZAP is enabled without CurveZMQ
+            sqlite_rx.exception.SQLiteRxZAPSetupError: If ZAP is enabled without CurveZMQ
         """
 
         self.socket = self.context.socket(sock_type)
@@ -96,22 +82,17 @@ class SQLiteZMQProcess(multiprocessing.Process):
                 destination_dir=curve_dir)
 
             if use_encryption:
-                self.info("Setting up encryption using CurveCP")
+                LOG.info("Setting up encryption using CurveCP")
                 self.socket = keymonkey.setup_secure_server(
                     self.socket, address)
 
             if use_zap:
                 if not use_encryption:
-                    raise ZAPSetupError(
-                        "ZAP requires CurveZMQ(use_encryption = True) to be enabled. Exiting")
+                    raise SQLiteRxZAPSetupError("ZAP requires CurveZMQ(use_encryption = True) to be enabled. Exiting")
 
                 self.auth = IOLoopAuthenticator(self.context)
-                # self.auth.deny([])
-                self.info(
-                    "ZAP enabled. \n Authorizing clients in %s." %
-                    keymonkey.authorized_clients_dir)
-                self.auth.configure_curve(
-                    domain="*", location=keymonkey.authorized_clients_dir)
+                LOG.info("ZAP enabled. \n Authorizing clients in %s.", keymonkey.authorized_clients_dir)
+                self.auth.configure_curve(domain="*", location=keymonkey.authorized_clients_dir)
                 self.auth.start()
 
         self.socket.bind(address)
@@ -176,7 +157,7 @@ class SQLiteServer(SQLiteZMQProcess):
 
     def run(self):
         self.setup()
-        self.info("Server Event Loop started")
+        LOG.info("Server Event Loop started")
         self.loop.start()
 
     def stop(self):
@@ -228,27 +209,25 @@ class QueryStreamHandler:
             self._rep_stream.send(zlib.compress(msgpack.dumps(result)))
 
     def execute(self, message: dict, *args, **kwargs):
-        LOG.debug("Request received is %s" % pformat(message))
+        LOG.debug("Request received is %s", pformat(message))
         execute_many = message['execute_many']
         execute_script = message['execute_script']
         error = None
         try:
             if execute_script:
-                LOG.debug("sqlite remote execute: execute_script")
+                LOG.debug("Query Mode: Execute Script")
                 self._cursor.executescript(message['query'])
             elif execute_many and message['params']:
-                LOG.debug("sqlite remote execute: execute_many")
+                LOG.debug("Query Mode: Execute Many")
                 self._cursor.executemany(message['query'], message['params'])
             elif message['params']:
-                LOG.debug("sqlite remote execute: execute(with params)")
+                LOG.debug("Query Mode: Conditional Params")
                 self._cursor.execute(message['query'], message['params'])
             else:
-                LOG.debug("sqlite remote execute: execute(without params)")
+                LOG.debug("Query Mode: Default No params")
                 self._cursor.execute(message['query'])
         except Exception:
-            LOG.exception(
-                "Exception while executing query %s" %
-                message['query'])
+            LOG.exception("Exception while executing query %s", message['query'])
             error = self.capture_exception()
 
         result = {
@@ -262,8 +241,7 @@ class QueryStreamHandler:
             return zlib.compress(msgpack.dumps(result))
 
         try:
-            for row in self._cursor.fetchall():
-                result['items'].append(row)
+            result['items'] = [row for row in self._cursor.fetchall()]
             return zlib.compress(msgpack.dumps(result))
         except Exception:
             LOG.exception("Exception while collecting rows")

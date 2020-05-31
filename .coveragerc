@@ -1,10 +1,8 @@
 [run]
-branch = False
 parallel = True
-
-source =
-    sqlite_rx
-
+branch = False
+concurrency = multiprocessing
+source = sqlite_rx
 omit =
     /*/tests/*
     .env/*

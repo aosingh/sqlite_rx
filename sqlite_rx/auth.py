@@ -6,7 +6,7 @@ from typing import Dict, Set
 
 import zmq
 import zmq.auth
-from sqlite_rx.exception import InvalidAuthConfig
+from sqlite_rx.exception import SQLiteRxAuthConfigError
 
 
 LOG = logging.getLogger(__name__)
@@ -67,7 +67,7 @@ class Authorizer:
             permissions are ``sqlite3.SQLITE_OK``, ``sqlite3.SQLITE_DENY`` and ``sqlite3.SQLITE_IGNORE``
 
         Raises:
-            sqlite_rx.exception.InvalidAuthConfig: if ``config`` contains invalid permissions other than
+            sqlite_rx.exception.SQLiteRxAuthConfigError: if ``config`` contains invalid permissions other than
             ``sqlite3.SQLITE_OK``, ``sqlite3.SQLITE_DENY`` and ``sqlite3.SQLITE_IGNORE``
 
         Example:
@@ -84,7 +84,7 @@ class Authorizer:
             sqlite3.SQLITE_OK,
             sqlite3.SQLITE_DENY}
         if any(k not in self.valid_return_values for k in self.config.keys()):
-            raise InvalidAuthConfig(
+            raise SQLiteRxAuthConfigError(
                 "Allowed return values are: "
                 "sqlite3.SQLITE_OK(0), sqlite3.SQLITE_DENY(1), sqlite3.SQLITE_IGNORE(2)")
 
@@ -150,7 +150,7 @@ class KeyGenerator:
         bogus = False
         for key in [self.public_key, self.private_key]:
             if os.path.exists(key):
-                print("%s already exists. Aborting." % key)
+                LOG.info("%s already exists. Aborting.", key)
                 bogus = True
                 break
         if bogus:
@@ -171,8 +171,8 @@ class KeyGenerator:
         LOG.info(server_secret_file)
         os.chmod(self.public_key, 0o600)
         os.chmod(self.private_key, 0o600)
-        LOG.info("Created %s." % self.public_key)
-        LOG.info("Created %s." % self.private_key)
+        LOG.info("Created Public key %s", self.public_key)
+        LOG.info("Created Private key %s", self.private_key)
 
 
 class KeyMonkey:
@@ -229,14 +229,10 @@ class KeyMonkey:
             server.curve_publickey = foo
             server.curve_secretkey = bar
             server.curve_server = True
-            LOG.info(
-                "Secure setup completed using on %s using curve key %s." %
-                (bind_address, self.my_id))
+            LOG.info("Secure setup completed using on %s using curve key %s", bind_address, self.my_id)
             return server
         except IOError:
-            LOG.exception(
-                "Couldn't load the private key: %s" %
-                self.private_key)
+            LOG.exception("Couldn't load the private key: %s", self.private_key)
             raise
         except Exception:
             LOG.exception("Exception while setting up CURVECP")
@@ -267,9 +263,7 @@ class KeyMonkey:
             client.curve_publickey = foo
             client.curve_secretkey = bar
         except IOError:
-            LOG.exception(
-                "Couldn't load the client private key: %s" %
-                self.private_key)
+            LOG.exception("Couldn't load the client private key: %s", self.private_key)
             raise
         else:
             # Clients need server's public key for encryption
@@ -279,13 +273,9 @@ class KeyMonkey:
                 client.curve_serverkey = foo
             except IOError:
                 LOG.exception(
-                    "Couldn't load the server public key %s " %
-                    os.path.join(
-                        self.curvedir,
-                        f"{servername}.key"))
+                    "Couldn't load the server public key %s ", os.path.join(self.curvedir, f"{servername}.key"))
                 raise
             else:
-                LOG.info(
-                    "Client connecting to %s (key %s) using curve key '%s'." %
-                    (connect_address, servername, self.my_id))
+                LOG.info("Client connecting to %s (key %s) using curve key '%s'.",
+                         connect_address, servername, self.my_id)
                 return client
