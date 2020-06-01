@@ -22,6 +22,7 @@ matrix:
         - SITECUSTOMIZELIBPATH=/home/travis/virtualenv/pypy3/site-packages/sitecustomize.py
         - COVERAGE_PROCESS_START=${TRAVIS_BUILD_DIR}/.coveragerc
 script:
+  - cat ${SITECUSTOMIZELIBPATH}
   - cp ${TRAVIS_BUILD_DIR}/.travis/sitecustomize.py ${SITECUSTOMIZELIBPATH}
   - pip install nose
   - pip install coverage
