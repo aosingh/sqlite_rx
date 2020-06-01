@@ -25,8 +25,7 @@ script:
   - pip install nose
   - pip install coverage
   - pip install coveralls
-  - touch ${SITECUSTOMIZELIBPATH}
-  - printf "import coverage\ncoverage.process_startup()\n" > ${SITECUSTOMIZELIBPATH};
+  - cp ${TRAVIS_BUILD_DIR}/.travis/sitecustomize.py ${SITECUSTOMIZELIBPATH}
   - python setup.py nosetests --with-coverage
   - coverage run --concurrency=multiprocessing -m unittest discover -s sqlite_rx/tests
   - coverage combine
