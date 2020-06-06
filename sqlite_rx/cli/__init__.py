@@ -29,7 +29,7 @@ def main(log_level,
          curve_dir,
          key_id):
     logging.config.dictConfig(get_default_logger_settings(level=log_level))
-    LOG.info("Python Platform %s" % platform.python_implementation())
+    LOG.info("Python Platform %s", platform.python_implementation())
     kwargs = {
         'bind_address': f'tcp://{advertise_host}:{port}',
         'database': database,
@@ -38,18 +38,9 @@ def main(log_level,
         'use_encryption': curvezmq,
         'server_curve_id': key_id
     }
-    LOG.info('Args %s' % pformat(kwargs))
+    LOG.info('Args %s', pformat(kwargs))
     server = SQLiteServer(**kwargs)
-    try:
-        server.start()
-    except KeyboardInterrupt:
-        LOG.warning("Keyboard Interrupt")
-        server.stop()
-    except Exception:
-        LOG.exception("Exception in Server Thread")
-        server.stop()
-        raise
-
+    server.start()
 
 
 

@@ -1,6 +1,7 @@
 import logging.config
 import multiprocessing
 import os
+import platform
 import socket
 import sqlite3
 import sys
@@ -11,9 +12,10 @@ from typing import List, Union, Callable
 
 import msgpack
 import zmq
+from sqlite_rx import get_version
 from sqlite_rx.auth import Authorizer, KeyMonkey
 from sqlite_rx.exception import SQLiteRxZAPSetupError
-from tornado import ioloop
+from tornado import ioloop, version
 from zmq.auth.ioloop import IOLoopAuthenticator
 from zmq.eventloop import zmqstream
 
@@ -32,15 +34,17 @@ class SQLiteZMQProcess(multiprocessing.Process):
         This class represents some of the abstractions for isolated server process
 
         """
+        super(SQLiteZMQProcess, self).__init__(*args, **kwargs)
         self.context = None
         self.loop = None
         self.socket = None
         self.auth = None
-        super(SQLiteZMQProcess, self).__init__(*args, **kwargs)
 
     def setup(self):
-        """Creates a ZMQ `context` and a Tornado `eventloop` for the SQLiteServer process
-        """
+        LOG.info("Python Platform %s", platform.python_implementation())
+        LOG.info("libzmq version %s", zmq.zmq_version())
+        LOG.info("pyzmq version %s", zmq.__version__)
+        LOG.info("tornado version %s", version)
         self.context = zmq.Context()
         self.loop = ioloop.IOLoop()
 
@@ -126,6 +130,7 @@ class SQLiteServer(SQLiteZMQProcess):
             use_zap_auth : True means use `ZAP` authentication. False means don't
 
         """
+        super(SQLiteServer, self).__init__(*args, *kwargs)
         self._bind_address = bind_address
         self._database = database
         self._auth_config = auth_config
@@ -134,7 +139,6 @@ class SQLiteServer(SQLiteZMQProcess):
         self.server_curve_id = server_curve_id
         self.curve_dir = curve_dir
         self.rep_stream = None
-        super(SQLiteServer, self).__init__(*args, *kwargs)
 
     def setup(self):
         """
@@ -142,7 +146,6 @@ class SQLiteServer(SQLiteZMQProcess):
 
         """
         super().setup()
-
         # Depending on the initialization parameters either get a plain stream or secure stream.
         self.rep_stream = self.stream(zmq.REP,
                                       self._bind_address,
@@ -157,12 +160,16 @@ class SQLiteServer(SQLiteZMQProcess):
 
     def run(self):
         self.setup()
-        LOG.info("Server Event Loop started")
-        self.loop.start()
-
-    def stop(self):
-        self.loop.stop()
-        self.socket.close()
+        LOG.info("SQLiteServer version %s", get_version())
+        LOG.info("SQLiteServer (Tornado) i/o loop started..")
+        try:
+            LOG.info("Ready to accept client connections on %s", self._bind_address)
+            self.loop.start()
+        except KeyboardInterrupt:
+            LOG.info("SQLiteServer Shutting down")
+            self.rep_stream.close()
+            self.socket.close()
+            self.loop.stop()
 
 
 class QueryStreamHandler:

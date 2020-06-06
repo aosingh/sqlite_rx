@@ -178,6 +178,22 @@ class SQLiteClient(threading.local):
         raise SQLiteRxConnectionError("No response after retrying. Abandoning Request")
 
     def shutdown(self):
-        self._client.setsockopt(zmq.LINGER, 0)
-        self._client.close()
-        self._poller.unregister(self._client)
+        try:
+            self._client.setsockopt(zmq.LINGER, 0)
+            self._client.close()
+            self._poller.unregister(self._client)
+        except zmq.ZMQError as e:
+            if e.errno in (zmq.EINVAL,
+                          zmq.EPROTONOSUPPORT,
+                          zmq.ENOCOMPATPROTO,
+                          zmq.EADDRINUSE,
+                          zmq.EADDRNOTAVAIL,):
+                LOG.error("ZeroMQ Transportation endpoint was not setup")
+
+            elif e.errno in (zmq.ENODEV, zmq.ENOTSOCK,):
+                LOG.error("ZeroMQ request was made against a non-existent device or invalid socket")
+
+            elif e.errno in (zmq.ETERM, zmq.EMTHREAD,):
+                LOG.error("ZeroMQ context is not a state to handle this request for socket")
+        except Exception:
+            LOG.exception("Exception while shutting down SQLiteClient")

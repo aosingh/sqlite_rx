@@ -8,3 +8,6 @@ dist
 sqlite_rx.egg-info
 .coveragerc
 docker_examples
+.coverage
+.pytest_cache
+.coverage

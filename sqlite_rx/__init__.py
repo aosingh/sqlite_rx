@@ -1,4 +1,4 @@
-__version__ = "0.9.98"
+__version__ = "0.9.99"
 __author__ = "Abhishek Singh"
 __authoremail__ = "aosingh@asu.edu"
 
@@ -40,3 +40,7 @@ def get_default_logger_settings(level: str = "DEBUG"):
             },
         }
     }
+
+
+def get_version():
+    return __version__

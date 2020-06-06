@@ -2,10 +2,11 @@
 parallel = True
 branch = False
 source = sqlite_rx
+concurrency = multiprocessing
 omit =
     /*/tests/*
     .env/*
-    /sqlite_rx/cli
+    ./sqlite_rx/cli/__init__.py
     /home/travis/virtualenv/*
 
 [report]

@@ -1,4 +1,4 @@
 click
-msgpack-python
+msgpack
 pyzmq
 tornado
