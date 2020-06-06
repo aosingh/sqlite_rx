@@ -1,16 +1,20 @@
 language: python
-os:
-  - linux
-python:
-  - "3.6"
-  - "3.7"
-  - "3.8"
-  - "pypy3"
+matrix:
+  include:
+    - os: linux
+      python: 3.6
+    - os: linux
+      python: 3.7
+    - os: linux
+      python: 3.8
+    - os: linux
+      python: pypy3
+install:
+  - pip install --upgrade pip
+  - pip install pytest pytest-cov coverage coveralls
+  - pip install -e .
 script:
-  - pip install nose
-  - pip install coverage
-  - pip install coveralls
-  - python setup.py nosetests --with-coverage
-  - coverage run --concurrency=multiprocessing -m unittest discover -s sqlite_rx/tests
+  - coverage run -m pytest --verbose sqlite_rx/tests
+  - coverage combine
   - coverage report -i -m
   - coveralls

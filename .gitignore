@@ -6,3 +6,5 @@ cover/
 build/
 dist/
 .coverage
+.pytest_cache
+.coverage

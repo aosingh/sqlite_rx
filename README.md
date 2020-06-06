@@ -52,11 +52,7 @@ def main():
     logging.config.dictConfig(get_default_logger_settings(logging.DEBUG))
     server = SQLiteServer(database=":memory:",
                           bind_address="tcp://127.0.0.1:5000")
-    try:
-        server.start()
-    except KeyboardInterrupt:
-        server.stop()
-
+    server.start()
 
 if __name__ == '__main__':
     main()
