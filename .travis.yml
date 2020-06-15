@@ -11,7 +11,7 @@ matrix:
       python: pypy3
 install:
   - pip install --upgrade pip
-  - pip install pytest pytest-cov coverage coveralls
+  - pip install pytest coverage coveralls
   - pip install -e .
 script:
   - coverage run -m pytest --verbose sqlite_rx/tests
