@@ -17,3 +17,4 @@ WORKDIR /svc
 
 RUN pip install --upgrade pip
 RUN pip install --no-index --find-links=/svc/wheels sqlite_rx
+
