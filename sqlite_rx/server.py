@@ -220,6 +220,7 @@ class QueryStreamHandler:
         execute_many = message['execute_many']
         execute_script = message['execute_script']
         error = None
+        lastrowid = None
         try:
             if execute_script:
                 LOG.debug("Query Mode: Execute Script")
@@ -229,10 +230,10 @@ class QueryStreamHandler:
                 self._cursor.executemany(message['query'], message['params'])
             elif message['params']:
                 LOG.debug("Query Mode: Conditional Params")
-                self._cursor.execute(message['query'], message['params'])
+                ret = self._cursor.execute(message['query'], message['params'])
             else:
                 LOG.debug("Query Mode: Default No params")
-                self._cursor.execute(message['query'])
+                ret = self._cursor.execute(message['query'])
         except Exception:
             LOG.exception("Exception while executing query %s", message['query'])
             error = self.capture_exception()
@@ -246,6 +247,10 @@ class QueryStreamHandler:
 
         if error:
             return zlib.compress(msgpack.dumps(result))
+
+        if ret is not None:
+            if ret.lastrowid is not None:
+                result['lastrowid'] = ret.lastrowid
 
         try:
             result['items'] = [row for row in self._cursor.fetchall()]
