@@ -247,6 +247,9 @@ class QueryStreamHandler:
         if error:
             return zlib.compress(msgpack.dumps(result))
 
+        if self._cursor.lastrowid:
+            result['lastrowid'] = self._cursor.lastrowid
+
         try:
             result['items'] = [row for row in self._cursor.fetchall()]
             return zlib.compress(msgpack.dumps(result))
