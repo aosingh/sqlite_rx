@@ -1,3 +1,8 @@
+import platform
+
+PYPY = True if platform.python_implementation() == "PyPy" else False
+
+
 
 def test_table_creation(plain_client):
     result = plain_client.execute('CREATE TABLE stocks (date text, trans text, symbol text, qty real, price real)')
@@ -75,14 +80,18 @@ def test_select_before_update(plain_client):
                  ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
                  ]
     result = plain_client.execute('SELECT * FROM stocks')
-    expected_result = {'error': None, 'items': [list(purchase) for purchase in purchases], 'lastrowid': 27}
+    expected_result = {'error': None, 'items': [list(purchase) for purchase in purchases]}
+    if not PYPY:
+        expected_result['lastrowid'] = 27
     assert result == expected_result
 
 
 def test_update(plain_client):
     args = ('IBM',)
     result = plain_client.execute('UPDATE stocks SET price = 480 where symbol = ?', *args)
-    expected_result = {'error': None, 'items': [], 'lastrowid': 27, 'rowcount': 9}
+    expected_result = {'error': None, 'items': [], 'rowcount': 9}
+    if not PYPY:
+        expected_result['lastrowid'] = 27
     assert result == expected_result
 
 
@@ -117,7 +126,9 @@ def test_select(plain_client):
                  ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
                  ]
     result = plain_client.execute('SELECT * FROM stocks')
-    expected_result = {'error': None, 'items': [list(purchase) for purchase in purchases], 'lastrowid': 27}
+    expected_result = {'error': None, 'items': [list(purchase) for purchase in purchases]}
+    if not PYPY:
+        expected_result['lastrowid'] = 27
     assert result == expected_result
 
 
@@ -127,7 +138,9 @@ def test_sql_script(plain_client):
 
                 INSERT INTO users(name, phone) VALUES ('John', '5557241'), 
                  ('Adam', '5547874'), ('Jack', '5484522');'''
-    expected_result = {"error": None, 'items': [], 'lastrowid': 27}
+    expected_result = {"error": None, 'items': []}
+    if not PYPY:
+        expected_result['lastrowid'] = 27
     result = plain_client.execute(script, execute_script=True)
     assert expected_result == result
 

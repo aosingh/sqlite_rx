@@ -1,7 +1,7 @@
 # sqlite_rx [![Downloads](https://pepy.tech/badge/sqlite-rx)](https://pepy.tech/project/sqlite-rx) [![Travis](https://travis-ci.org/aosingh/sqlite_rx.svg?branch=master)](https://travis-ci.org/aosingh/sqlite_rx)  [![PyPI version](https://badge.fury.io/py/sqlite-rx.svg)](https://pypi.python.org/pypi/sqlite-rx) [![Coverage Status](https://coveralls.io/repos/github/aosingh/sqlite_rx/badge.svg?branch=master)](https://coveralls.io/github/aosingh/sqlite_rx?branch=master)
 [![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)]((https://www.python.org/downloads/release/python-370/)) [![Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/downloads/release/python-370/) [![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg)](https://www.python.org/downloads/release/python-380/)
 [![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)]((https://www.python.org/downloads/release/python-390/))
-[![PyPy3](https://img.shields.io/badge/python-PyPy3-blue.svg)](https://www.pypy.org/index.html)
+[![PyPy3.6](https://img.shields.io/badge/python-PyPy3.6-blue.svg)](https://www.pypy.org/index.html)
 ## Background
 
 [SQLite](https://www.sqlite.org/index.html) is a lightweight database written in C. 
@@ -21,8 +21,6 @@ Key Features
 
 # Install
 
-Currently, only Python 3 is supported.
-
 ```commandline
 pip install sqlite_rx
 ```
@@ -31,9 +29,6 @@ pip install sqlite_rx
 
 ## Server
 
-Following are the options to start an `SQLiteServer`
-
-### Python API
 `SQLiteServer` runs in a single thread and follows an event-driven concurrency model (using `tornado's` event loop) which minimizes the cost of concurrent client connections.
 
 ```python
@@ -58,14 +53,6 @@ def main():
 if __name__ == '__main__':
     main()
 ```
-
-### CLI to start a server
-
-Refer [CLI](#cli)
-
-### Docker
-
-Refer [Docker Examples](#docker-examples)
 
 
 ## Client
@@ -92,7 +79,8 @@ import logging.config
 from sqlite_rx.client import SQLiteClient
 from sqlite_rx import get_default_logger_settings
 
-# sqlite_rx comes with a default logger settings. You could use as below.
+# sqlite_rx comes with a default logger settings. 
+# You could use as below.
 logging.config.dictConfig(get_default_logger_settings(logging.DEBUG))
 
 
@@ -102,13 +90,13 @@ client = SQLiteClient(connect_address="tcp://127.0.0.1:5000")
 ### CREATE TABLE statement
 
 ```python
-
 result = client.execute("CREATE TABLE stocks (date text, trans text, symbol text, qty real, price real)")
 pprint(result)
 ```
 OUTPUT
-```text
-{'error': None, 'items': []}
+```python
+{'error': None, 
+'items': []}
 ```
 
 
@@ -116,33 +104,32 @@ OUTPUT
 
 ```python
 purchases = [('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
-                 ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
-                 ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
-                 ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
-                 ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
-                 ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
-                 ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
-                 ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
-                 ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
-                 ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
-                 ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
-                 ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
-                 ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
-                 ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
-                 ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
-                 ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
-                 ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
-                 ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
-                 ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
-                 ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
-                 ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
-                 ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
-                 ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
-                 ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
-                 ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
-                 ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
-                 ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
-                ]
+             ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
+             ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
+             ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
+             ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
+             ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
+             ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
+             ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
+             ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
+             ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
+             ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
+             ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
+             ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
+             ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
+             ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
+             ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
+             ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
+             ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
+             ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
+             ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
+             ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
+             ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
+             ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
+             ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
+             ('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
+             ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
+             ('2006-04-06', 'SELL', 'XOM', 500, 53.00)]
 
 result = client.execute("INSERT INTO stocks VALUES (?,?,?,?,?)", *purchases, execute_many=True)
 pprint(result)
@@ -150,8 +137,10 @@ pprint(result)
 ```
 OUTPUT
 
-```text
-{'error': None, 'items': [], 'rowcount': 27}
+```python
+{'error': None, 
+ 'items': [], 
+ 'rowcount': 27}
 ```
 
 ### SELECT with WHERE clause
@@ -163,7 +152,7 @@ pprint(result)
 ```
 OUTPUT
 
-```text
+```python
 {'error': None,
  'items': [['2006-03-28', 'BUY', 'IBM', 1000.0, 45.0],
            ['2006-03-28', 'BUY', 'IBM', 1000.0, 45.0],
@@ -172,7 +161,10 @@ OUTPUT
            ['2006-03-28', 'BUY', 'IBM', 1000.0, 45.0],
            ['2006-03-28', 'BUY', 'IBM', 1000.0, 45.0],
            ['2006-03-28', 'BUY', 'IBM', 1000.0, 45.0],
-           ['2006-03-28', 'BUY', 'IBM', 1000.0, 45.0]]}
+           ['2006-03-28', 'BUY', 'IBM', 1000.0, 45.0],
+           ['2006-03-28', 'BUY', 'IBM', 1000.0, 45.0]],
+ 'lastrowid': 27}
+
 ```
 
 ### Execute an SQL script
@@ -190,8 +182,11 @@ pprint(result)
 ```
 
 OUTPUT
-```text
-{'error': None, 'items': []}
+
+```python
+{'error': None, 
+ 'items': [], 
+ 'lastrowid': 27}
 ```
 
 Select the rows inserted using the above sql_script
@@ -202,9 +197,12 @@ pprint(result)
 ```
 
 OUTPUT
-```text
-{'error': None, 'items': [[2, 'Adam', '5547874'], 
-                          [3, 'Jack', '5484522']]}
+```python
+{'error': None,
+ 'items': [[1, 'John', '5557241'],
+           [2, 'Adam', '5547874'],
+           [3, 'Jack', '5484522']],
+ 'lastrowid': 3}
 ```
 
 
@@ -219,7 +217,7 @@ pprint(result)
 
 OUTPUT
 
-```text
+```python
 {'error': {'message': 'sqlite3.DatabaseError: not authorized',
            'type': 'sqlite3.DatabaseError'},
  'items': []}
@@ -228,13 +226,13 @@ OUTPUT
 ### SELECT statement; Table not present
 ```python
 from pprint import pprint
-result = client.execute("SELECT * FROM IDOLS")
+result = client.execute("SELECT * FROM STUDENTS")
 pprint(result)
 
 ```
 OUTPUT
-```text
-{'error': {'message': 'sqlite3.OperationalError: no such table: IDOLS',
+```python
+{'error': {'message': 'sqlite3.OperationalError: no such table: STUDENTS',
            'type': 'sqlite3.OperationalError'},
  'items': []}
 ```

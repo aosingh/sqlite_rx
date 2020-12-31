@@ -11,6 +11,12 @@ matrix:
       python: 3.9
     - os: linux
       python: pypy3.6-7.1.1
+    - os: linux
+      python: pypy3.6-7.2.0
+    - os: linux
+      python: pypy3.6-7.3.3
+    - os: linux
+      python: pypy3.7-7.3.3
 install:
   - pip install --upgrade pip
   - pip install pytest coverage coveralls
