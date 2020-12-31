@@ -23,20 +23,24 @@ PACKAGES = ['sqlite_rx']
 DEPENDENCIES = ['msgpack', 'pyzmq', 'tornado', 'click']
 
 classifiers = [
-    'Development Status :: 4 - Beta',
+    'Development Status :: 5 - Production/Stable',
     'Intended Audience :: Education',
     'Intended Audience :: Developers',
     'Intended Audience :: Science/Research',
+    'Intended Audience :: System Administrators',
     'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+    'Programming Language :: Python :: 3 :: Only',
+    'Programming Language :: Python :: 3.6',
     'Programming Language :: Python :: 3.7',
     'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
     'Operating System :: POSIX :: Linux',
     'Operating System :: Unix',
     'Operating System :: Microsoft :: Windows',
     'Topic :: Database :: Database Engines/Servers',
     'Operating System :: MacOS'
 ]
-keywords = 'sqlite client server'
+keywords = 'sqlite client server fast secure'
 
 
 setup(
