@@ -25,6 +25,15 @@ Key Features
 pip install sqlite_rx
 ```
 
+## Supported OS 
+- Linux
+- MacOS
+- Windows
+
+## Supported Python Platforms
+- CPython 3.6, 3.7, 3.8, 3.9
+- PyPy3.6-7.1.1
+
 # Examples
 
 ## Server
