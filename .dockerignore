@@ -11,3 +11,6 @@ docker_examples
 .coverage
 .pytest_cache
 .coverage
+sqlite_demo.py
+example.db
+venv/

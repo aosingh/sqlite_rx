@@ -54,6 +54,6 @@ def test_table_rows_insertion(curvezmq_client):
                  ]
 
     result = curvezmq_client.execute('INSERT INTO stocks VALUES (?,?,?,?,?)', *purchases, execute_many=True)
-    expected_result = {'error': None, 'items': [], 'row_count': 27}
+    expected_result = {'error': None, 'items': [], 'rowcount': 27}
     assert result == expected_result
 

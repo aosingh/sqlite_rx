@@ -79,16 +79,12 @@ class SQLiteZMQProcess(multiprocessing.Process):
 
         if use_encryption or use_zap:
 
-            server_curve_id = server_curve_id if server_curve_id else "id_server_{}_curve".format(
-                socket.gethostname())
-            keymonkey = KeyMonkey(
-                key_id=server_curve_id,
-                destination_dir=curve_dir)
+            server_curve_id = server_curve_id if server_curve_id else "id_server_{}_curve".format(socket.gethostname())
+            keymonkey = KeyMonkey(key_id=server_curve_id, destination_dir=curve_dir)
 
             if use_encryption:
                 LOG.info("Setting up encryption using CurveCP")
-                self.socket = keymonkey.setup_secure_server(
-                    self.socket, address)
+                self.socket = keymonkey.setup_secure_server(self.socket, address)
 
             if use_zap:
                 if not use_encryption:
@@ -241,18 +237,20 @@ class QueryStreamHandler:
             "items": [],
             "error": error
         }
-        if self._cursor.rowcount > -1:
-            result['row_count'] = self._cursor.rowcount
-
         if error:
             return zlib.compress(msgpack.dumps(result))
 
-        if self._cursor.lastrowid:
-            result['lastrowid'] = self._cursor.lastrowid
-
         try:
-            result['items'] = [row for row in self._cursor.fetchall()]
+            result['items'] = list(self._cursor.fetchall())
+            # If rowcount attribute is set on the cursor object include it in the response
+            if self._cursor.rowcount > -1:
+                result['rowcount'] = self._cursor.rowcount
+            # If lastrowid attribute is set on the cursor include it in the response
+            if self._cursor.lastrowid:
+                result['lastrowid'] = self._cursor.lastrowid
+
             return zlib.compress(msgpack.dumps(result))
+
         except Exception:
             LOG.exception("Exception while collecting rows")
             result['error'] = self.capture_exception()

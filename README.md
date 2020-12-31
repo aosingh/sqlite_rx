@@ -1,12 +1,13 @@
-# sqlite_rx [![Travis](https://travis-ci.org/aosingh/sqlite_rx.svg?branch=master)](https://travis-ci.org/aosingh/sqlite_rx)  [![PyPI version](https://badge.fury.io/py/sqlite-rx.svg)](https://pypi.python.org/pypi/sqlite-rx) [![Coverage Status](https://coveralls.io/repos/github/aosingh/sqlite_rx/badge.svg?branch=master)](https://coveralls.io/github/aosingh/sqlite_rx?branch=master)
+# sqlite_rx [![Downloads](https://pepy.tech/badge/sqlite-rx)](https://pepy.tech/project/sqlite-rx) [![Travis](https://travis-ci.org/aosingh/sqlite_rx.svg?branch=master)](https://travis-ci.org/aosingh/sqlite_rx)  [![PyPI version](https://badge.fury.io/py/sqlite-rx.svg)](https://pypi.python.org/pypi/sqlite-rx) [![Coverage Status](https://coveralls.io/repos/github/aosingh/sqlite_rx/badge.svg?branch=master)](https://coveralls.io/github/aosingh/sqlite_rx?branch=master)
 [![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)]((https://www.python.org/downloads/release/python-370/)) [![Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/downloads/release/python-370/) [![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg)](https://www.python.org/downloads/release/python-380/)
+[![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)]((https://www.python.org/downloads/release/python-390/))
 [![PyPy3](https://img.shields.io/badge/python-PyPy3-blue.svg)](https://www.pypy.org/index.html)
 ## Background
 
 [SQLite](https://www.sqlite.org/index.html) is a lightweight database written in C. 
 The Python programming language has in-built support to interact with the database(locally) which is either stored on disk or in memory.
 
-## Introducing sqlite_rx (SQLite remote execution)
+## Introducing sqlite_rx - SQLite remote query execution
 With `sqlite_rx`, clients should be able to communicate with an `SQLiteServer` in a fast, simple and secure manner and execute queries remotely.
 
 Key Features
@@ -98,20 +99,6 @@ logging.config.dictConfig(get_default_logger_settings(logging.DEBUG))
 client = SQLiteClient(connect_address="tcp://127.0.0.1:5000")
 ```
 
-### SELECT statement: (Table not present)
-```python
-from pprint import pprint
-result = client.execute("SELECT * FROM IDOLS")
-pprint(result)
-
-```
-OUTPUT
-```text
-{'error': {'message': 'sqlite3.OperationalError: no such table: IDOLS',
-           'type': 'sqlite3.OperationalError'},
- 'items': []}
-```
-
 ### CREATE TABLE statement
 
 ```python
@@ -164,7 +151,7 @@ pprint(result)
 OUTPUT
 
 ```text
-{'error': None, 'items': [], 'row_count': 27}
+{'error': None, 'items': [], 'rowcount': 27}
 ```
 
 ### SELECT with WHERE clause
@@ -188,7 +175,7 @@ OUTPUT
            ['2006-03-28', 'BUY', 'IBM', 1000.0, 45.0]]}
 ```
 
-### Execute a SCRIPT
+### Execute an SQL script
 
 ```python
 script = '''CREATE TABLE users(id INTEGER PRIMARY KEY, name TEXT, phone TEXT);
@@ -221,7 +208,7 @@ OUTPUT
 ```
 
 
-### DROP a TABLE
+### DROP a Table
 
 Note: In the default authorization setting, a client is not allowed to drop any table.
 
@@ -235,6 +222,20 @@ OUTPUT
 ```text
 {'error': {'message': 'sqlite3.DatabaseError: not authorized',
            'type': 'sqlite3.DatabaseError'},
+ 'items': []}
+```
+
+### SELECT statement; Table not present
+```python
+from pprint import pprint
+result = client.execute("SELECT * FROM IDOLS")
+pprint(result)
+
+```
+OUTPUT
+```text
+{'error': {'message': 'sqlite3.OperationalError: no such table: IDOLS',
+           'type': 'sqlite3.OperationalError'},
  'items': []}
 ```
 

@@ -17,6 +17,7 @@ logging.config.dictConfig(get_default_logger_settings(level="DEBUG"))
 
 LOG = logging.getLogger(__file__)
 
+
 @pytest.fixture(scope="module")
 def curvezmq_client():
     with get_server_auth_files() as auth_files:

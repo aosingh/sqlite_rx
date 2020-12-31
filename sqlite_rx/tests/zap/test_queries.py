@@ -53,5 +53,5 @@ def test_table_rows_insertion(zap_client):
                  ('2006-04-06', 'SELL', 'XOM', 500, 53.00),
                  ]
     result = zap_client.execute('INSERT INTO stocks VALUES (?,?,?,?,?)', *purchases, execute_many=True)
-    expected_result = {'error': None, 'items': [], 'row_count': 27}
+    expected_result = {'error': None, 'items': [], 'rowcount': 27}
     assert result == expected_result
