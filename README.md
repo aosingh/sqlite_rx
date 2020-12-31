@@ -131,7 +131,9 @@ purchases = [('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
              ('2006-04-05', 'BUY', 'MSFT', 1000, 72.00),
              ('2006-04-06', 'SELL', 'XOM', 500, 53.00)]
 
-result = client.execute("INSERT INTO stocks VALUES (?,?,?,?,?)", *purchases, execute_many=True)
+result = client.execute("INSERT INTO stocks VALUES (?,?,?,?,?)", 
+                        *purchases, 
+                        execute_many=True)
 pprint(result)
 
 ```
@@ -189,7 +191,7 @@ OUTPUT
  'lastrowid': 27}
 ```
 
-Select the rows inserted using the above sql_script
+Select the rows inserted using the above SQL script
 
 ```python
 result = client.execute("SELECT * FROM users")
