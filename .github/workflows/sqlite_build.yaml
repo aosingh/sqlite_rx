@@ -1,0 +1,33 @@
+name: Validate SQLite Client Server on different platforms and OS.
+jobs:
+  unittests:
+    name: 
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-16.04, ubuntu-18.04, ubuntu-20.04]
+        python: [3.6, 3.7, 3.8, 3.9]
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install click pytest coverage
+        pip install -e .
+        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        pip install coverage
+    
+    - name: Run Unittests
+      run: |
+        coverage run -m pytest --verbose sqlite_rx/tests
+        coverage combine
+        coverage report -m
+      
