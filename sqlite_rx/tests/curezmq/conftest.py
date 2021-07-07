@@ -1,7 +1,7 @@
 import pytest
 
 import os
-import multiprocessing
+import platform
 import socket
 import shutil
 import signal
@@ -54,7 +54,10 @@ def curvezmq_client():
         # server.join()
         LOG.info("Started Test SQLiteServer")
         yield client
-        os.kill(server.pid, signal.SIGINT)
+        if platform.system.lower() == 'windows':
+            os.system("taskkill  /F /pid "+str(server.pid))
+        else:
+            os.kill(server.pid, signal.SIGINT)
         server.join()
         client.shutdown()
 
