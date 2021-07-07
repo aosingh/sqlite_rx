@@ -1,4 +1,6 @@
 name: Validate SQLite Client Server on different platforms and OS.
+on: push
+
 jobs:
   unittests:
     name: 
