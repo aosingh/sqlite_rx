@@ -1,5 +1,4 @@
 import logging.config
-# import multiprocessing
 import os
 import platform
 import socket
@@ -8,12 +7,17 @@ import sys
 import traceback
 import zlib
 from pprint import pformat
-from signal import SIGTERM, SIGINT, SIGHUP, SIGKILL, signal
+from signal import SIGTERM, SIGINT, signal
+
+if platform.system().lower() != 'windows':
+    from signal import SIGHUP
+else:
+    from signal import CTRL_C_EVENT
+
 from typing import List, Union, Callable
 
 import billiard as multiprocess
 import msgpack
-# import multiprocess
 import zmq
 from sqlite_rx import get_version
 from sqlite_rx.auth import Authorizer, KeyMonkey
@@ -199,7 +203,12 @@ class SQLiteServer(SQLiteZMQProcess):
 
         signal(SIGTERM, self.handle_signal)
         # signal(SIGKILL, self.handle_signal)
-        signal(SIGHUP, self.handle_signal)
+
+        if platform.system().lower() != 'windows':
+            signal(SIGHUP, self.handle_signal)
+        else:
+            signal(CTRL_C_EVENT, self.handle_signal)
+
         signal(SIGINT, self.handle_signal)
 
         self.setup()
