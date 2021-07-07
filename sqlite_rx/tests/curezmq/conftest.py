@@ -54,7 +54,7 @@ def curvezmq_client():
         # server.join()
         LOG.info("Started Test SQLiteServer")
         yield client
-        if platform.system.lower() == 'windows':
+        if platform.system().lower() == 'windows':
             os.system("taskkill  /F /pid "+str(server.pid))
         else:
             os.kill(server.pid, signal.SIGINT)
