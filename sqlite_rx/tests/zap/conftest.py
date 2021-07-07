@@ -50,7 +50,11 @@ def zap_client():
                               client_curve_id=client_key_id,
                               curve_dir=curve_dir,
                               use_encryption=True)
+        
+        # server.daemon = True
+
         server.start()
+        # server.join()
         LOG.info("Started Test SQLiteServer")
         yield client
         os.kill(server.pid, signal.SIGINT)

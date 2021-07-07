@@ -1,5 +1,5 @@
 import logging.config
-import multiprocessing
+# import multiprocessing
 import os
 import platform
 import socket
@@ -8,12 +8,17 @@ import sys
 import traceback
 import zlib
 from pprint import pformat
+from signal import SIGTERM, SIGINT, SIGHUP, SIGKILL, signal
 from typing import List, Union, Callable
 
+import billiard as multiprocess
 import msgpack
+# import multiprocess
 import zmq
 from sqlite_rx import get_version
 from sqlite_rx.auth import Authorizer, KeyMonkey
+from sqlite_rx.backup import SQLiteBackUp, ThreadingRecurringTimer
+from sqlite_rx.exception import SQLiteRxBackUpError
 from sqlite_rx.exception import SQLiteRxZAPSetupError
 from tornado import ioloop, version
 from zmq.auth.ioloop import IOLoopAuthenticator
@@ -27,7 +32,7 @@ LOG = logging.getLogger(__name__)
 __all__ = ['SQLiteServer']
 
 
-class SQLiteZMQProcess(multiprocessing.Process):
+class SQLiteZMQProcess(multiprocess.Process):
 
     def __init__(self, *args, **kwargs):
         """The :class: ``sqlite_rx.server.SQLiteServer`` is intended to run as an isolated process.
@@ -113,6 +118,8 @@ class SQLiteServer(SQLiteZMQProcess):
                  server_curve_id: str = None,
                  use_encryption: bool = False,
                  use_zap_auth: bool = False,
+                 backup_database: Union[bytes, str] = None,
+                 backup_interval: int = 4,
                  *args, **kwargs):
         """
         SQLiteServer runs as an isolated python process.
@@ -135,6 +142,17 @@ class SQLiteServer(SQLiteZMQProcess):
         self.server_curve_id = server_curve_id
         self.curve_dir = curve_dir
         self.rep_stream = None
+        self.back_up_recurring_thread = None
+
+        if backup_database is not None:
+            if not (sys.version_info.major == 3 and sys.version_info.minor >= 7):
+                LOG.warning("Backup requires Python 3.7 or higher")
+                raise SQLiteRxBackUpError("SQLite backup requires Python 3.7 or higher")
+            
+            sqlite_backup = SQLiteBackUp(src=database, target=backup_database)
+            self.back_up_recurring_thread = ThreadingRecurringTimer(function=sqlite_backup, interval=backup_interval)
+            self.back_up_recurring_thread.daemon = True
+
 
     def setup(self):
         """
@@ -153,19 +171,47 @@ class SQLiteServer(SQLiteZMQProcess):
         self.rep_stream.on_recv(QueryStreamHandler(self.rep_stream,
                                                    self._database,
                                                    self._auth_config))
+    
+
+    def handle_signal(self, signum, frame):
+
+        LOG.info("SQLiteServer %s PID %s received %r", self, self.pid, signum)
+        LOG.info("SQLiteServer Shutting down")
+
+        self.rep_stream.close()
+        self.socket.close()
+        self.loop.stop()
+        
+        # self.terminate()
+
+        # If backup process was started then wait for the backup thread to finish. 
+        if self.back_up_recurring_thread:
+            # self.back_up_recurring_thread.join()
+            # pthread_kill(self.back_up_recurring_thread.get_ident())
+            self.back_up_recurring_thread.cancel()
+        
+        os._exit(os.EX_OK)
+
+        
 
     def run(self):
+        LOG.info("Setting up signal handlers")
+
+        signal(SIGTERM, self.handle_signal)
+        # signal(SIGKILL, self.handle_signal)
+        signal(SIGHUP, self.handle_signal)
+        signal(SIGINT, self.handle_signal)
+
         self.setup()
+
         LOG.info("SQLiteServer version %s", get_version())
         LOG.info("SQLiteServer (Tornado) i/o loop started..")
-        try:
-            LOG.info("Ready to accept client connections on %s", self._bind_address)
-            self.loop.start()
-        except KeyboardInterrupt:
-            LOG.info("SQLiteServer Shutting down")
-            self.rep_stream.close()
-            self.socket.close()
-            self.loop.stop()
+
+        if self.back_up_recurring_thread:
+            self.back_up_recurring_thread.start()
+
+        LOG.info("Ready to accept client connections on %s", self._bind_address)
+        self.loop.start()
 
 
 class QueryStreamHandler:
@@ -195,8 +241,7 @@ class QueryStreamHandler:
     def capture_exception():
         exc_type, exc_value, exc_tb = sys.exc_info()
         exc_type_string = "%s.%s" % (exc_type.__module__, exc_type.__name__)
-        error = {"type": exc_type_string, "message": traceback.format_exception_only(
-            exc_type, exc_value)[-1].strip()}
+        error = {"type": exc_type_string, "message": traceback.format_exception_only(exc_type, exc_value)[-1].strip()}
         return error
 
     def __call__(self, message: List):

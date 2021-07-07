@@ -104,9 +104,8 @@ class SQLiteClient(threading.local):
                 query: str,
                 *args,
                 **kwargs) -> dict:
-        """
-        Send the `query` and the parameters to a remote SQLiteServer instance which will then
-        execute the query.
+        """Synchronous which will send the `query` and the parameters to a remote SQLiteServer instance,
+        wait for the response and return the response to the caller.
 
         Important keyword arguments are as follows:
 

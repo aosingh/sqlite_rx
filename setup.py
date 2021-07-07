@@ -20,7 +20,7 @@ URL = 'https://github.com/aosingh/sqlite_rx'
 
 PACKAGES = ['sqlite_rx']
 
-DEPENDENCIES = ['msgpack', 'pyzmq', 'tornado', 'click']
+DEPENDENCIES = ['msgpack', 'pyzmq', 'tornado', 'click', 'billiard']
 
 classifiers = [
     'Development Status :: 5 - Production/Stable',

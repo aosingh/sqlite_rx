@@ -1,6 +1,7 @@
 import pytest
 
 import os
+import multiprocessing
 import socket
 import shutil
 import signal
@@ -42,12 +43,15 @@ def curvezmq_client():
                               auth_config=auth_config,
                               database=":memory:")
 
+        # server.daemon = True
+
         client = SQLiteClient(connect_address="tcp://127.0.0.1:5002",
                               server_curve_id=server_key_id,
                               client_curve_id=client_key_id,
                               curve_dir=curve_dir,
                               use_encryption=True)
         server.start()
+        # server.join()
         LOG.info("Started Test SQLiteServer")
         yield client
         os.kill(server.pid, signal.SIGINT)

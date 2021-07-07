@@ -1,4 +1,6 @@
 import logging.config
+import signal
+import sys
 
 import click
 import platform
@@ -20,6 +22,8 @@ LOG = logging.getLogger(__name__)
 @click.option('--curvezmq/--no-curvezmq', help='True, if you want to enable CurveZMQ encryption', default=False, show_default=True)
 @click.option('--curve-dir', help='Curve Key directory', default=None)
 @click.option('--key-id', help='Server key ID', default=None)
+@click.option('--backup-database', help='Path to the backup database', default=None, type=str, show_default=True)
+@click.option('--backup-interval', help='Backup interval', default=5.0, type=float, show_default=True)
 def main(log_level,
          advertise_host,
          port,
@@ -27,7 +31,9 @@ def main(log_level,
          zap,
          curvezmq,
          curve_dir,
-         key_id):
+         key_id,
+         backup_database,
+         backup_interval):
     logging.config.dictConfig(get_default_logger_settings(level=log_level))
     LOG.info("Python Platform %s", platform.python_implementation())
     kwargs = {
@@ -36,11 +42,20 @@ def main(log_level,
         'curve_dir': curve_dir,
         'use_zap_auth': zap,
         'use_encryption': curvezmq,
-        'server_curve_id': key_id
+        'server_curve_id': key_id,
+        'backup_database': backup_database,
+        'backup_interval': backup_interval
     }
     LOG.info('Args %s', pformat(kwargs))
+
+    # def signal_handler(sig, frame):
+    #    sys.exit(1)
+
+    # signal.signal(signal.SIGTERM, signal_handler)
+
     server = SQLiteServer(**kwargs)
     server.start()
+    server.join()
 
 
 

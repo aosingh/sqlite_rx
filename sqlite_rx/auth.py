@@ -268,8 +268,7 @@ class KeyMonkey:
         else:
             # Clients need server's public key for encryption
             try:
-                foo, _ = zmq.auth.load_certificate(
-                    os.path.join(self.curvedir, f"{servername}.key"))
+                foo, _ = zmq.auth.load_certificate(os.path.join(self.curvedir, f"{servername}.key"))
                 client.curve_serverkey = foo
             except IOError:
                 LOG.exception(

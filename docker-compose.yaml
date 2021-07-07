@@ -3,7 +3,7 @@ services:
 
   sqlite_server:
     image: aosingh/sqlite_rx
-    command: sqlite-server --log-level DEBUG --database /data/database.db
+    command: sqlite-server --log-level DEBUG --database /data/database.db --backup-database /data/backup.db
     ports:
       - 5001:5000
     volumes:
