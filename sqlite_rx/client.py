@@ -3,7 +3,6 @@ import os
 import socket
 import threading
 import zlib
-from pprint import pformat
 
 import msgpack
 import zmq
@@ -161,7 +160,6 @@ class SQLiteClient(threading.local):
                 socks = dict(self._poller.poll(request_timeout))
                 if socks.get(self._client) == zmq.POLLIN:
                     response = self._recv_response()
-                    LOG.debug("Response %s", pformat(response))
                     return response
                 else:
                     LOG.warning("No response from server, retrying...")
@@ -175,6 +173,12 @@ class SQLiteClient(threading.local):
                     self._send_request(request)
 
         raise SQLiteRxConnectionError("No response after retrying. Abandoning Request")
+    
+    def __enter__(self):
+        return self
+    
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.shutdown()
 
     def shutdown(self):
         try:
@@ -183,10 +187,10 @@ class SQLiteClient(threading.local):
             self._poller.unregister(self._client)
         except zmq.ZMQError as e:
             if e.errno in (zmq.EINVAL,
-                          zmq.EPROTONOSUPPORT,
-                          zmq.ENOCOMPATPROTO,
-                          zmq.EADDRINUSE,
-                          zmq.EADDRNOTAVAIL,):
+                           zmq.EPROTONOSUPPORT,
+                           zmq.ENOCOMPATPROTO,
+                           zmq.EADDRINUSE,
+                           zmq.EADDRNOTAVAIL,):
                 LOG.error("ZeroMQ Transportation endpoint was not setup")
 
             elif e.errno in (zmq.ENODEV, zmq.ENOTSOCK,):

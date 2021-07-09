@@ -1,22 +1,26 @@
-# sqlite_rx [![Downloads](https://pepy.tech/badge/sqlite-rx)](https://pepy.tech/project/sqlite-rx) [![Travis](https://travis-ci.org/aosingh/sqlite_rx.svg?branch=master)](https://travis-ci.org/aosingh/sqlite_rx)  [![PyPI version](https://badge.fury.io/py/sqlite-rx.svg)](https://pypi.python.org/pypi/sqlite-rx) [![Coverage Status](https://coveralls.io/repos/github/aosingh/sqlite_rx/badge.svg?branch=master)](https://coveralls.io/github/aosingh/sqlite_rx?branch=master)
+# sqlite_rx [![Downloads](https://pepy.tech/badge/sqlite-rx)](https://pepy.tech/project/sqlite-rx) [![sqlite-rx](https://github.com/aosingh/sqlite-rx/actions/workflows/sqlite_build.yaml/badge.svg)]
+
+[![PyPI version](https://badge.fury.io/py/sqlite-rx.svg)](https://pypi.python.org/pypi/sqlite-rx) 
+
 [![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)]((https://www.python.org/downloads/release/python-370/)) [![Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/downloads/release/python-370/) [![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg)](https://www.python.org/downloads/release/python-380/)
 [![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)]((https://www.python.org/downloads/release/python-390/))
 [![PyPy3.6](https://img.shields.io/badge/python-PyPy3.6-blue.svg)](https://www.pypy.org/index.html)
+
 ## Background
 
 [SQLite](https://www.sqlite.org/index.html) is a lightweight database written in C. 
-The Python programming language has in-built support to interact with the database(locally) which is either stored on disk or in memory.
+The Python programming language has in-built support to interact with the database (locally) which is either stored on disk or in memory.
 
-## Introducing sqlite_rx - SQLite remote query execution
+## sqlite_rx
 With `sqlite_rx`, clients should be able to communicate with an `SQLiteServer` in a fast, simple and secure manner and execute queries remotely.
 
 Key Features
 
 - Python Client and Server for [SQLite](https://www.sqlite.org/index.html) database built using [ZeroMQ](http://zguide.zeromq.org/page:all) as the transport layer and [msgpack](https://msgpack.org/index.html) for serialization/deserialization.
-- Supports authentication using [ZeroMQ Authentication Protocol (ZAP)](https://rfc.zeromq.org/spec:27/ZAP/)
-- Supports encryption using [CurveZMQ](http://curvezmq.org/)
-- Allows the users to define a generic authorization policy during server startup
-
+- Authentication using [ZeroMQ Authentication Protocol (ZAP)](https://rfc.zeromq.org/spec:27/ZAP/)
+- Encryption using [CurveZMQ](http://curvezmq.org/)
+- Generic authorization policy during server startup
+- Schedule regular backups
 
 
 # Install
@@ -58,6 +62,7 @@ def main():
     server = SQLiteServer(database=":memory:",
                           bind_address="tcp://127.0.0.1:5000")
     server.start()
+    server.join()
 
 if __name__ == '__main__':
     main()

@@ -6,12 +6,11 @@ import sqlite3
 import sys
 import traceback
 import zlib
-from pprint import pformat
 from signal import SIGTERM, SIGINT, signal
 
 from typing import List, Union, Callable
 
-import billiard as multiprocess
+import billiard as multiprocessing
 import msgpack
 import zmq
 from sqlite_rx import get_version
@@ -31,7 +30,7 @@ LOG = logging.getLogger(__name__)
 __all__ = ['SQLiteServer']
 
 
-class SQLiteZMQProcess(multiprocess.Process):
+class SQLiteZMQProcess(multiprocessing.Process):
 
     def __init__(self, *args, **kwargs):
         """The :class: ``sqlite_rx.server.SQLiteServer`` is intended to run as an isolated process.
@@ -181,18 +180,12 @@ class SQLiteServer(SQLiteZMQProcess):
         self.socket.close()
         self.loop.stop()
         
-        # self.terminate()
-
-        # If backup process was started then wait for the backup thread to finish. 
         if self.back_up_recurring_thread:
-            # self.back_up_recurring_thread.join()
-            # pthread_kill(self.back_up_recurring_thread.get_ident())
             self.back_up_recurring_thread.cancel()
         
         os._exit(os.EX_OK)
 
         
-
     def run(self):
         LOG.info("Setting up signal handlers")
 
@@ -254,7 +247,6 @@ class QueryStreamHandler:
             self._rep_stream.send(zlib.compress(msgpack.dumps(result)))
 
     def execute(self, message: dict, *args, **kwargs):
-        LOG.debug("Request received is %s", pformat(message))
         execute_many = message['execute_many']
         execute_script = message['execute_script']
         error = None
