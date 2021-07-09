@@ -16,4 +16,4 @@ def error_client():
     client = SQLiteClient(connect_address="tcp://127.0.0.1:5004")
     yield client
     LOG.info("Shutting down SQLite Client")
-    client.shutdown()
+    client.cleanup()

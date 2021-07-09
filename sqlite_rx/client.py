@@ -163,7 +163,7 @@ class SQLiteClient(threading.local):
                     return response
                 else:
                     LOG.warning("No response from server, retrying...")
-                    self.shutdown()
+                    self.cleanup()
                     request_retries -= 1
                     if request_retries == 0:
                         LOG.error("Server seems to be offline, abandoning")
@@ -178,9 +178,9 @@ class SQLiteClient(threading.local):
         return self
     
     def __exit__(self, exc_type, exc_value, traceback):
-        self.shutdown()
+        self.cleanup()
 
-    def shutdown(self):
+    def cleanup(self):
         try:
             self._client.setsockopt(zmq.LINGER, 0)
             self._client.close()

@@ -52,10 +52,8 @@ def zap_client():
                               curve_dir=curve_dir,
                               use_encryption=True)
         
-        # server.daemon = True
 
         server.start()
-        # server.join()
         LOG.info("Started Test SQLiteServer")
         yield client
         if platform.system().lower() == 'windows':
@@ -63,6 +61,6 @@ def zap_client():
         else:
             os.kill(server.pid, signal.SIGINT)
         server.join()
-        client.shutdown()
+        client.cleanup()
 
 

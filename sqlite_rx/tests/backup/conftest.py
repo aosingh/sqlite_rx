@@ -60,4 +60,4 @@ def plain_client():
             os.kill(server.pid, signal.SIGINT)
 
         server.join()
-        client.shutdown()
+        client.cleanup()

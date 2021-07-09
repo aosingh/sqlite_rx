@@ -1,6 +1,6 @@
-# sqlite_rx [![Downloads](https://pepy.tech/badge/sqlite-rx)](https://pepy.tech/project/sqlite-rx) ![sqlite-rx](https://github.com/aosingh/sqlite_rx/actions/workflows/sqlite_build.yaml/badge.svg)
+# sqlite_rx 
+[![PyPI version](https://badge.fury.io/py/sqlite-rx.svg)](https://pypi.python.org/pypi/sqlite-rx) [![sqlite-rx](https://github.com/aosingh/sqlite_rx/actions/workflows/sqlite_build.yaml/badge.svg)](https://github.com/aosingh/sqlite_rx/actions) [![Downloads](https://pepy.tech/badge/sqlite-rx)](https://pepy.tech/project/sqlite-rx)
 
-[![PyPI version](https://badge.fury.io/py/sqlite-rx.svg)](https://pypi.python.org/pypi/sqlite-rx) 
 
 [![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)]((https://www.python.org/downloads/release/python-370/)) [![Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/downloads/release/python-370/) [![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg)](https://www.python.org/downloads/release/python-380/)
 [![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)]((https://www.python.org/downloads/release/python-390/))
@@ -11,7 +11,7 @@
 [SQLite](https://www.sqlite.org/index.html) is a lightweight database written in C. 
 The Python programming language has in-built support to interact with the database (locally) which is either stored on disk or in memory.
 
-## sqlite_rx
+## Introduction
 With `sqlite_rx`, clients should be able to communicate with an `SQLiteServer` in a fast, simple and secure manner and execute queries remotely.
 
 Key Features
@@ -20,7 +20,7 @@ Key Features
 - Authentication using [ZeroMQ Authentication Protocol (ZAP)](https://rfc.zeromq.org/spec:27/ZAP/)
 - Encryption using [CurveZMQ](http://curvezmq.org/)
 - Generic authorization policy during server startup
-- Schedule regular backups for on-disk database (Not supported on Windows and Python version < 3.7)
+- Schedule regular backups for on-disk database (Not supported on Windows and for Python versions older than 3.7)
 
 
 # Install
@@ -37,8 +37,6 @@ pip install sqlite_rx
 ## Supported Python Platforms
 - CPython 3.6, 3.7, 3.8, 3.9
 - PyPy3.6
-
-# Examples
 
 ## Server
 
@@ -66,8 +64,8 @@ def main():
 
 if __name__ == '__main__':
     main()
-```
 
+```
 
 ## Client
 
@@ -84,8 +82,6 @@ The `execute` method reacts to the following keyword arguments:
 4. `retries`: Number of times to retry before abandoning the request. Default is 5
 
 
-Below are a few examples
-
 ### Instantiate a client
 
 ```python
@@ -101,7 +97,7 @@ logging.config.dictConfig(get_default_logger_settings(logging.DEBUG))
 client = SQLiteClient(connect_address="tcp://127.0.0.1:5000")
 ```
 
-### CREATE TABLE statement
+### CREATE TABLE
 
 ```python
 result = client.execute("CREATE TABLE stocks (date text, trans text, symbol text, qty real, price real)")
@@ -112,7 +108,6 @@ pprint(result)
 {'error': None, 
 'items': []}
 ```
-
 
 ### INSERT MANY rows
 
@@ -245,6 +240,59 @@ pprint(result)
            'type': 'sqlite3.OperationalError'},
  'items': []}
 ```
+
+### Client Clean up
+
+Call `cleanup()`
+
+```python
+client = SQLiteClient(connect_address="tcp://127.0.0.1:5001")
+args = ('IBM',)
+result = client.execute("SELECT * FROM stocks WHERE symbol = ?", *args)
+client.cleanup()
+```
+
+Use `with` contextmanager
+
+```python
+
+client = SQLiteClient(connect_address="tcp://127.0.0.1:5001")
+args = ('IBM',)
+with client:
+  result = client.execute("SELECT * FROM stocks WHERE symbol = ?", *args)
+
+```
+
+## Backup
+
+With `sqlite-rx`, database backup can be regularly peformed. The backup function can be configured to run as a background thread during server startup. Use `backup_interval` argument to specify how frequently backup should be performed in seconds.
+
+```python
+
+def main():
+
+    # database is a path-like object giving the pathname 
+    # of the database file to be opened. 
+    
+    # You can use ":memory:" to open a database connection to a database 
+    # that resides in RAM instead of on disk
+
+    logging.config.dictConfig(get_default_logger_settings(logging.DEBUG))
+    server = SQLiteServer(database="main.db",
+                          bind_address="tcp://127.0.0.1:5000",
+                          backup_database='backup.db',
+                          backup_interval=500)
+    server.start()
+    server.join()
+
+if __name__ == '__main__':
+    main()
+
+```
+### Constrinats
+- Requires Python >= 3.7 
+  - Backup is performed using sqlite backup API which was introduced in Python 3.7
+- Not supported on Windows
 
 ## Generic Default Authorization Policy
 
