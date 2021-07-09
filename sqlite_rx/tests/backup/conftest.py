@@ -22,34 +22,39 @@ backup_event = namedtuple('backup_event', ('client', 'backup_database'))
 
 @pytest.fixture(scope="module")
 def plain_client():
-    
-    if (sys.version_info.major == 3 and sys.version_info.minor >= 7):
-        auth_config = {
-            sqlite3.SQLITE_OK: {
-                sqlite3.SQLITE_DROP_TABLE
-            }
+
+    auth_config = {
+        sqlite3.SQLITE_OK: {
+            sqlite3.SQLITE_DROP_TABLE
         }
-        with tempfile.NamedTemporaryFile() as back_db_file, tempfile.NamedTemporaryFile() as main_db_file:
+    }
+    with tempfile.NamedTemporaryFile() as back_db_file, tempfile.NamedTemporaryFile() as main_db_file:
+        
+        if (sys.version_info.major == 3 and sys.version_info.minor >= 7):
             server = SQLiteServer(bind_address="tcp://127.0.0.1:5003",
                                 database=main_db_file.name,
                                 auth_config=auth_config,
                                 backup_database=back_db_file.name,
                                 backup_interval=1)
-            
-            client = SQLiteClient(connect_address="tcp://127.0.0.1:5003")
+        else:
+            server = SQLiteServer(bind_address="tcp://127.0.0.1:5003",
+                                database=main_db_file.name,
+                                auth_config=auth_config)
+        
+        client = SQLiteClient(connect_address="tcp://127.0.0.1:5003")
 
-            event = backup_event(client=client, backup_database=back_db_file.name)
+        event = backup_event(client=client, backup_database=back_db_file.name)
 
-            server.start()
+        server.start()
 
-            LOG.info("Started Test SQLiteServer")
+        LOG.info("Started Test SQLiteServer")
 
-            yield event
+        yield event
 
-            if platform.system().lower() == 'windows':
-                os.system("taskkill  /F /pid "+str(server.pid))
-            else:
-                os.kill(server.pid, signal.SIGINT)
+        if platform.system().lower() == 'windows':
+            os.system("taskkill  /F /pid "+str(server.pid))
+        else:
+            os.kill(server.pid, signal.SIGINT)
 
-            server.join()
-            client.shutdown()
+        server.join()
+        client.shutdown()
