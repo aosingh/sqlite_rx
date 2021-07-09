@@ -1,4 +1,4 @@
-# sqlite_rx [![Downloads](https://pepy.tech/badge/sqlite-rx)](https://pepy.tech/project/sqlite-rx) [![sqlite-rx](https://github.com/aosingh/sqlite-rx/actions/workflows/sqlite_build.yaml/badge.svg?branch=v1.0.2)]
+# sqlite_rx [![Downloads](https://pepy.tech/badge/sqlite-rx)](https://pepy.tech/project/sqlite-rx) [![sqlite-rx](https://github.com/aosingh/sqlite_rx/actions/workflows/sqlite_build.yaml/badge.svg?branch=v1.0.2)]
 
 [![PyPI version](https://badge.fury.io/py/sqlite-rx.svg)](https://pypi.python.org/pypi/sqlite-rx) 
 
