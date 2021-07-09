@@ -289,7 +289,7 @@ if __name__ == '__main__':
     main()
 
 ```
-### Constrinats
+### Constraints
 - Requires Python >= 3.7 
   - Backup is performed using sqlite backup API which was introduced in Python 3.7
 - Not supported on Windows
