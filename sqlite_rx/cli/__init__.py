@@ -23,7 +23,7 @@ LOG = logging.getLogger(__name__)
 @click.option('--curve-dir', help='Curve Key directory', default=None)
 @click.option('--key-id', help='Server key ID', default=None)
 @click.option('--backup-database', help='Path to the backup database', default=None, type=str, show_default=True)
-@click.option('--backup-interval', help='Backup interval', default=5.0, type=float, show_default=True)
+@click.option('--backup-interval', help='Backup interval in seconds', default=600.0, type=float, show_default=True)
 def main(log_level,
          advertise_host,
          port,

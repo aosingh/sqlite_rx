@@ -15,7 +15,7 @@ import msgpack
 import zmq
 from sqlite_rx import get_version
 from sqlite_rx.auth import Authorizer, KeyMonkey
-from sqlite_rx.backup import SQLiteBackUp, ThreadingRecurringTimer
+from sqlite_rx.backup import SQLiteBackUp, RecurringTimer
 from sqlite_rx.exception import SQLiteRxBackUpError
 from sqlite_rx.exception import SQLiteRxZAPSetupError
 from tornado import ioloop, version
@@ -148,7 +148,7 @@ class SQLiteServer(SQLiteZMQProcess):
                 raise SQLiteRxBackUpError("SQLite backup requires Python 3.7 or higher")
             
             sqlite_backup = SQLiteBackUp(src=database, target=backup_database)
-            self.back_up_recurring_thread = ThreadingRecurringTimer(function=sqlite_backup, interval=backup_interval)
+            self.back_up_recurring_thread = RecurringTimer(function=sqlite_backup, interval=backup_interval)
             self.back_up_recurring_thread.daemon = True
 
 

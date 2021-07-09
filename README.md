@@ -313,6 +313,7 @@ Usage: sqlite-server [OPTIONS]
 Options:
   --log-level [CRITICAL|FATAL|ERROR|WARN|WARNING|INFO|DEBUG|NOTSET]
                                   Logging level  [default: INFO]
+
   --advertise-host TEXT           Host address on which to run the
                                   SQLiteServer  [default: 0.0.0.0]
 
@@ -324,13 +325,19 @@ Options:
                                   database  [default: :memory:]
 
   --zap / --no-zap                True, if you want to enable ZAP
-                                  authentication  [default: False]
+                                  authentication  [default: no-zap]
 
   --curvezmq / --no-curvezmq      True, if you want to enable CurveZMQ
-                                  encryption  [default: False]
+                                  encryption  [default: no-curvezmq]
 
   --curve-dir TEXT                Curve Key directory
+
   --key-id TEXT                   Server key ID
+
+  --backup-database TEXT          Path to the backup database
+
+  --backup-interval FLOAT         Backup interval in seconds  [default: 600.0]
+  
   --help                          Show this message and exit.
 ```
 

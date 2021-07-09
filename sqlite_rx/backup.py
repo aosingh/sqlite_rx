@@ -30,7 +30,7 @@ class SQLiteBackUp:
         LOG.info("Finished Backup: Source %s , Target %s ", self.src, self.target)
 
 
-class ThreadingRecurringTimer(threading.Timer):
+class RecurringTimer(threading.Timer):
 
     def run(self) -> None:
         while not self.finished.wait(self.interval):
