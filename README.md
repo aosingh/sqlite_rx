@@ -1,4 +1,4 @@
-# sqlite_rx [![Downloads](https://pepy.tech/badge/sqlite-rx)](https://pepy.tech/project/sqlite-rx) [![sqlite-rx](https://github.com/aosingh/sqlite-rx/actions/workflows/sqlite_build.yaml/badge.svg)]
+# sqlite_rx [![Downloads](https://pepy.tech/badge/sqlite-rx)](https://pepy.tech/project/sqlite-rx) [![sqlite-rx](https://github.com/aosingh/sqlite-rx/actions/workflows/sqlite_build.yaml/badge.svg?branch=v1.0.2)]
 
 [![PyPI version](https://badge.fury.io/py/sqlite-rx.svg)](https://pypi.python.org/pypi/sqlite-rx) 
 
@@ -20,7 +20,7 @@ Key Features
 - Authentication using [ZeroMQ Authentication Protocol (ZAP)](https://rfc.zeromq.org/spec:27/ZAP/)
 - Encryption using [CurveZMQ](http://curvezmq.org/)
 - Generic authorization policy during server startup
-- Schedule regular backups
+- Schedule regular backups for on-disk database (Not supported on Windows and Python version < 3.7)
 
 
 # Install
@@ -36,7 +36,7 @@ pip install sqlite_rx
 
 ## Supported Python Platforms
 - CPython 3.6, 3.7, 3.8, 3.9
-- PyPy3.6-7.1.1
+- PyPy3.6
 
 # Examples
 
@@ -107,7 +107,7 @@ client = SQLiteClient(connect_address="tcp://127.0.0.1:5000")
 result = client.execute("CREATE TABLE stocks (date text, trans text, symbol text, qty real, price real)")
 pprint(result)
 ```
-OUTPUT
+
 ```python
 {'error': None, 
 'items': []}
@@ -151,7 +151,6 @@ result = client.execute("INSERT INTO stocks VALUES (?,?,?,?,?)",
 pprint(result)
 
 ```
-OUTPUT
 
 ```python
 {'error': None, 
@@ -166,7 +165,6 @@ result = client.execute("SELECT * FROM stocks WHERE symbol = ?", *args)
 pprint(result)
 
 ```
-OUTPUT
 
 ```python
 {'error': None,
@@ -197,8 +195,6 @@ pprint(result)
 
 ```
 
-OUTPUT
-
 ```python
 {'error': None, 
  'items': [], 
@@ -212,7 +208,6 @@ result = client.execute("SELECT * FROM users")
 pprint(result)
 ```
 
-OUTPUT
 ```python
 {'error': None,
  'items': [[1, 'John', '5557241'],
@@ -231,8 +226,6 @@ result = client.execute("DROP TABLE stocks")
 pprint(result)
 ```
 
-OUTPUT
-
 ```python
 {'error': {'message': 'sqlite3.DatabaseError: not authorized',
            'type': 'sqlite3.DatabaseError'},
@@ -246,7 +239,7 @@ result = client.execute("SELECT * FROM STUDENTS")
 pprint(result)
 
 ```
-OUTPUT
+
 ```python
 {'error': {'message': 'sqlite3.OperationalError: no such table: STUDENTS',
            'type': 'sqlite3.OperationalError'},
@@ -337,7 +330,7 @@ Options:
   --backup-database TEXT          Path to the backup database
 
   --backup-interval FLOAT         Backup interval in seconds  [default: 600.0]
-  
+
   --help                          Show this message and exit.
 ```
 
