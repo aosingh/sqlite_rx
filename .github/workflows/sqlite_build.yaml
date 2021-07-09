@@ -1,4 +1,4 @@
-name: Validate SQLite Client Server on different platforms and OS.
+name: sqlite_rx
 on: push
 
 jobs:
