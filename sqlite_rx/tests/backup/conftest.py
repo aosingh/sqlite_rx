@@ -28,22 +28,25 @@ def plain_client():
             sqlite3.SQLITE_DROP_TABLE
         }
     }
-    with tempfile.NamedTemporaryFile() as back_db_file, tempfile.NamedTemporaryFile() as main_db_file:
-        
+    with tempfile.TemporaryDirectory() as base_dir:
+
+        main_db_file = os.path.join(base_dir, 'main.db')
+        backup_db_file = os.path.join(base_dir, 'backup.db')
+
         if (sys.version_info.major == 3 and sys.version_info.minor >= 7):
             server = SQLiteServer(bind_address="tcp://127.0.0.1:5003",
-                                database=main_db_file.name,
-                                auth_config=auth_config,
-                                backup_database=back_db_file.name,
-                                backup_interval=1)
+                                  database=main_db_file,
+                                  auth_config=auth_config,
+                                  backup_database=backup_db_file,
+                                  backup_interval=1)
         else:
             server = SQLiteServer(bind_address="tcp://127.0.0.1:5003",
-                                database=main_db_file.name,
-                                auth_config=auth_config)
+                                 database=main_db_file,
+                                 auth_config=auth_config)
         
         client = SQLiteClient(connect_address="tcp://127.0.0.1:5003")
 
-        event = backup_event(client=client, backup_database=back_db_file.name)
+        event = backup_event(client=client, backup_database=backup_db_file)
 
         server.start()
 
