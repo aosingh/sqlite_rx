@@ -372,8 +372,8 @@ All docker examples use this console script as an entrypoint
 
 # Secure Client and Server Setup
 
-Please read the [link](https://github.com/aosingh/sqlite_rx/wiki/Secure-Client-Server-Setup) for a detailed explanation on how to setup a secure client/server communication.
-This link also explains how to setup CurveZMQ encryption and ZAP authentication
+Please read the [link](https://aosingh.github.io/sqlite_rx/security) for a detailed explanation on how to setup a secure client/server communication.
+This link explains how to setup CurveZMQ encryption and ZAP authentication
 
 # Docker Examples
 
