@@ -5,9 +5,9 @@ heading_anchors: true
 # Aux links for the upper right navigation
 aux_links:
    "Introduction":
-    - "https://aosingh.github.io/sqlite_rx/introduction.html"
+    - "introduction.md"
   "Secure Client Server Setup":
-    - "https://aosingh.github.io/sqlite_rx/security.html"
+    - "security.md"
  
 
 # Makes Aux links open in a new tab. Default is false
