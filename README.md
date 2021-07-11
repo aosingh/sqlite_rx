@@ -204,7 +204,6 @@ In the default authorization setting, a client is not allowed to drop any table.
 
 ```python
 result = client.execute("DROP TABLE stocks")
-pprint(result)
 ```
 
 ```python
@@ -213,7 +212,13 @@ pprint(result)
  'items': []}
 ```
 
-### 
+
+### Errors
+
+Error details, if any, is returned in the `error` key as shown below. 
+
+In the example below, the table `STUDENTS` is not found.
+
 ```python
 
 with client:
@@ -255,8 +260,7 @@ with client:
 
 ## Backup
 
-With `sqlite-rx`, database backup can be scheduled to run regularly during Server startup. 
-Under the hood, this uses SQLite's Online [Backup](https://docs.python.org/3/library/sqlite3.html#sqlite3.Connection.backup) API. The Backup function runs as a daemon thread and it makes backup even while the database is being accessed by other clients. 
+Database backup can be scheduled to run regularly during Server startup. Under the hood, this uses SQLite's Online [Backup](https://docs.python.org/3/library/sqlite3.html#sqlite3.Connection.backup) API. The Backup function runs as a daemon thread and it makes backup even while the database is being accessed by other clients. 
 
 You can specify `backup_interval` (time in seconds) to control how frequently backup should be performed. 
 
