@@ -2,13 +2,5 @@
 remote_theme: pmarsceill/just-the-docs
 heading_anchors: true
 
-# Aux links for the upper right navigation
-aux_links:
-   "Introduction":
-    - "introduction.md"
-  "Secure Client Server Setup":
-    - "security.md"
- 
-
 # Makes Aux links open in a new tab. Default is false
 aux_links_new_tab: false
