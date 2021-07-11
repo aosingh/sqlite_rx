@@ -1,5 +1,3 @@
-# sqlite_rx 
-
 ## Background
 
 [SQLite](https://www.sqlite.org/index.html) is a lightweight database written in C. 
@@ -14,7 +12,7 @@ Key Features
 - Authentication using [ZeroMQ Authentication Protocol (ZAP)](https://rfc.zeromq.org/spec:27/ZAP/)
 - Encryption using [CurveZMQ](http://curvezmq.org/)
 - Generic authorization policy during server startup
-- Schedule regular backups for on-disk database (Not supported on Windows and for Python versions older than 3.7)
+- Schedule regular backups for on-disk database (Currently not supported on Windows and for Python versions < 3.7)
 
 
 # Install
@@ -34,13 +32,10 @@ pip install sqlite_rx
 
 ## Server
 
-`SQLiteServer` runs in a single thread and follows an event-driven concurrency model (using `tornado's` event loop) which minimizes the cost of concurrent client connections.
+`SQLiteServer` runs in a single thread and follows an event-driven concurrency model (using `tornado's` event loop) which minimizes the cost of concurrent client connections. Following snippet shows how you can start the server process.
 
 ```python
-import logging.config
-from sqlite_rx import get_default_logger_settings
 from sqlite_rx.server import SQLiteServer
-
 
 def main():
 
@@ -50,7 +45,6 @@ def main():
     # You can use ":memory:" to open a database connection to a database 
     # that resides in RAM instead of on disk
 
-    logging.config.dictConfig(get_default_logger_settings(logging.DEBUG))
     server = SQLiteServer(database=":memory:",
                           bind_address="tcp://127.0.0.1:5000")
     server.start()
@@ -78,29 +72,22 @@ The `execute` method reacts to the following keyword arguments:
 
 ### Instantiate a client
 
+The following snippet shows how you can instantiate an `SQLiteClient` and execute a simple `CREATE TABLE` query.
+
 ```python
-import logging.config
 from sqlite_rx.client import SQLiteClient
-from sqlite_rx import get_default_logger_settings
-
-# sqlite_rx comes with a default logger settings. 
-# You could use as below.
-logging.config.dictConfig(get_default_logger_settings(logging.DEBUG))
-
 
 client = SQLiteClient(connect_address="tcp://127.0.0.1:5000")
-```
 
-### CREATE TABLE
+with client:
+  query = "CREATE TABLE stocks (date text, trans text, symbol text, qty real, price real)"
+  result = client.execute(query)
 
-```python
-result = client.execute("CREATE TABLE stocks (date text, trans text, symbol text, qty real, price real)")
-pprint(result)
 ```
 
 ```python
 {'error': None, 
-'items': []}
+ 'items': []}
 ```
 
 ### INSERT MANY rows
@@ -137,7 +124,6 @@ purchases = [('2006-03-28', 'BUY', 'IBM', 1000, 45.00),
 result = client.execute("INSERT INTO stocks VALUES (?,?,?,?,?)", 
                         *purchases, 
                         execute_many=True)
-pprint(result)
 
 ```
 
@@ -148,10 +134,10 @@ pprint(result)
 ```
 
 ### SELECT with WHERE clause
+
 ```python
 args = ('IBM',)
 result = client.execute("SELECT * FROM stocks WHERE symbol = ?", *args)
-pprint(result)
 
 ```
 
@@ -180,7 +166,6 @@ script = '''CREATE TABLE users(id INTEGER PRIMARY KEY, name TEXT, phone TEXT);
              ('Adam', '5547874'), ('Jack', '5484522');'''
 
 result = client.execute(script, execute_script=True)
-pprint(result)
 
 ```
 
@@ -190,11 +175,10 @@ pprint(result)
  'lastrowid': 27}
 ```
 
-Select the rows inserted using the above SQL script
+Select rows inserted using the above SQL script
 
 ```python
 result = client.execute("SELECT * FROM users")
-pprint(result)
 ```
 
 ```python
@@ -206,13 +190,12 @@ pprint(result)
 ```
 
 
-### DROP a Table
+### DROP a table
 
-Note: In the default authorization setting, a client is not allowed to drop any table.
+In the default authorization setting, a client is not allowed to drop any table.
 
 ```python
 result = client.execute("DROP TABLE stocks")
-pprint(result)
 ```
 
 ```python
@@ -221,11 +204,15 @@ pprint(result)
  'items': []}
 ```
 
-### SELECT statement; Table not present
+
+### Errors
+
+In the example below, client executes a `SELECT` query on table `STUDENTS` which does not exist.
+
 ```python
-from pprint import pprint
-result = client.execute("SELECT * FROM STUDENTS")
-pprint(result)
+
+with client:
+  result = client.execute("SELECT * FROM STUDENTS")
 
 ```
 
@@ -235,7 +222,11 @@ pprint(result)
  'items': []}
 ```
 
-### Client Clean up
+### SQLiteClient clean up
+
+When you use `zeromq` sockets in a programming language like Python, objects get automatically freed for you. 
+However, if you want to explicitly perform clean up and free the I/O resources, there are 2 options. 
+You can either call the `cleanup()` method or execute queries in the context of the client i.e. `with` statement.
 
 Call `cleanup()`
 
@@ -259,7 +250,9 @@ with client:
 
 ## Backup
 
-With `sqlite-rx`, database backup can be regularly peformed. The backup function can be configured to run as a background thread during server startup. Use `backup_interval` argument to specify how frequently backup should be performed in seconds.
+Database backup can be scheduled to run regularly during Server startup. Under the hood, this uses SQLite's Online [Backup](https://docs.python.org/3/library/sqlite3.html#sqlite3.Connection.backup) API. The Backup function runs as a daemon thread and it makes backup even while the database is being accessed by other clients. 
+
+You can specify `backup_interval` (time in seconds) to control how frequently backup should be performed. 
 
 ```python
 
@@ -271,7 +264,6 @@ def main():
     # You can use ":memory:" to open a database connection to a database 
     # that resides in RAM instead of on disk
 
-    logging.config.dictConfig(get_default_logger_settings(logging.DEBUG))
     server = SQLiteServer(database="main.db",
                           bind_address="tcp://127.0.0.1:5000",
                           backup_database='backup.db',
@@ -285,11 +277,11 @@ if __name__ == '__main__':
 ```
 ### Constraints
 - Requires Python >= 3.7 
-  - Backup is performed using sqlite backup API which was introduced in Python 3.7
+  - Backup is performed using sqlite3 backup API which was introduced in Python 3.7
 - Not supported on Windows
 
-## Generic Default Authorization Policy
 
+## Generic Default Authorization Policy
 
 ```python
 DEFAULT_AUTH_CONFIG = {
@@ -342,7 +334,7 @@ It is recommended you **do not** override the `SQLITE_PRAGMA` action as the data
 
 `sqlite-server` is a console script to start an SQLiteServer.
 
-```bash
+```text
 Usage: sqlite-server [OPTIONS]
 
 Options:
@@ -388,7 +380,6 @@ This link also explains how to setup CurveZMQ encryption and ZAP authentication
 The following `docker-compose` examples using the docker image [`aosingh/sqlite_rx`](https://hub.docker.com/r/aosingh/sqlite_rx)
 
 
-
 `sqlite-server` CLI is used in all the docker examples
 
 ## In-memory SQLite Database
@@ -406,7 +397,7 @@ services:
 
 - Note that in the docker container the server listens on port `5000` so, do enable port forwarding on the host machine
 
-## On Disk SQLite Database
+## On Disk SQLite Database with Backup
 
 docker volume is used to persist the database file on the host's file system
 
@@ -417,7 +408,7 @@ services:
 
   sqlite_server:
     image: aosingh/sqlite_rx
-    command: sqlite-server --log-level DEBUG --database /data/database.db
+    command: sqlite-server --log-level DEBUG --database /data/database.db --backup-database /data/backup.db
     ports:
       - 5000:5000
     volumes:
