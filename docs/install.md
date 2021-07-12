@@ -3,10 +3,16 @@ layout: default
 title: Install
 nav_order: 2
 ---
-[![PyPI version](https://badge.fury.io/py/sqlite-rx.svg)](https://pypi.python.org/pypi/sqlite-rx)
+
+Latest version - [1.0.2](https://pypi.org/project/sqlite-rx/)
+{: .fs-6 .fw-300 }
+
+Install using `pip`
 
 ```commandline
+
 pip install sqlite_rx
+
 ```
 
 ## Supported OS 

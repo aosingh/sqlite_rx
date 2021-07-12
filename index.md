@@ -13,6 +13,7 @@ nav_order: 1
 The Python programming language has in-built support to interact with the database (locally) which is either stored on disk or in memory.
 
 With `sqlite_rx`, clients should be able to communicate with an `SQLiteServer` in a fast, simple and secure manner and execute queries remotely.
+{: .fs-6 .fw-300 }
 
 Key Features
 
