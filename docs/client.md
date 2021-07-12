@@ -154,11 +154,9 @@ result = client.execute("DROP TABLE stocks")
 ```
 
 
-### Errors
+### Error
 
-Error details, if any, is returned in the `error` key as shown below. 
-
-In the example below, the table `STUDENTS` is not found.
+In the example below, client executes a `SELECT` query on table `STUDENTS` which does not exist.
 
 ```python
 
