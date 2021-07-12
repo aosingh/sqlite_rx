@@ -37,7 +37,7 @@ color_scheme: dark
 kramdown:
   syntax_highlighter_opts:
     block:
-      line_numbers: false
+      line_numbers: true
 
 # Makes Aux links open in a new tab. Default is false
 aux_links_new_tab: false

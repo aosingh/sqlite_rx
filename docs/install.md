@@ -4,8 +4,7 @@ title: Install
 nav_order: 2
 ---
 
-Python Package Index (PyPI) version:  [1.0.2](https://pypi.org/project/sqlite-rx/)
-{: .fs-6 .fw-300 }
+## Release v1.0.2 Installation
 
 You can install `sqlite_rx` via the Python Package Index (PyPI) using `pip`
 
