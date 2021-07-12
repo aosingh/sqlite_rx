@@ -1,4 +1,8 @@
-# Secure Client Server Setup
+---
+layout: default
+title: Secure Client Server Setup
+nav_order: 8
+---
 
 ## Curve Key Generation
 
