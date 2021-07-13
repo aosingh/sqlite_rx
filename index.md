@@ -12,7 +12,7 @@ nav_order: 1
 [SQLite](https://www.sqlite.org/index.html) is a lightweight database written in C. 
 The Python programming language has in-built support to interact with the database (locally) which is either stored on disk or in memory.
 
-With `sqlite_rx`, clients should be able to communicate with an `SQLiteServer` in a fast, simple and secure manner and execute queries remotely. {: .fs-6 .fw-300 }
+With `sqlite_rx`, clients should be able to communicate with an `SQLiteServer` in a fast, simple and secure manner and execute queries remotely.
 
 Key Features
 
@@ -20,4 +20,4 @@ Key Features
 - Authentication using [ZeroMQ Authentication Protocol (ZAP)](https://rfc.zeromq.org/spec:27/ZAP/)
 - Encryption using [CurveZMQ](http://curvezmq.org/)
 - Generic authorization policy during server startup
-- Schedule regular backups for on-disk database (Currently not supported on Windows and for Python versions < 3.7)
+- Schedule regular backups for on-disk databases (Currently not supported on Windows and for Python versions < 3.7)

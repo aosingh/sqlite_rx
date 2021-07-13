@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Command Line Interface (CLI)
-nav_order: 7
+nav_order: 8
 ---
 
 `sqlite-server` is a console script to start an SQLiteServer.
