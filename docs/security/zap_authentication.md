@@ -46,8 +46,6 @@ if __name__ == "__main__":
     main()
 ```
 
-**OUTPUT**
-
 ```bash
 
 2019-10-24 17:32:15,550 - INFO     server.py:41  Setting up encryption using CurveCP
@@ -79,8 +77,6 @@ pprint("Result is %s" % result)
 
 ```
 
-**OUTPUT**
-
 ```bash
 python client.py
 2019-10-24 17:34:06,646 - INFO     client.py:58  Initializing Client
@@ -89,3 +85,4 @@ python client.py
 2019-10-24 17:34:06,647 - INFO     client.py:71  Executing query CREATE TABLE stocks_2 (date text, trans text, symbol text, qty real, price real) for client python@Abhisheks-MBP_140736436749248
 2019-10-24 17:34:06,647 - INFO     client.py:95  Preparing to send request
 "Result is {'items': [], 'error': None}"
+```
