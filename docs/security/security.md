@@ -2,6 +2,7 @@
 layout: default
 title: Secure Client Server Setup
 nav_order: 7
+has_children: true
 permalink: /docs/security
 
 ---
