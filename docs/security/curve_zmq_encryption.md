@@ -1,6 +1,7 @@
 ---
 layout: default
 title: CurveZMQ Encryption
+parent: Secure Client Server Setup
 nav_order: 2
 ---
 

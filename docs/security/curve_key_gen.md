@@ -1,6 +1,7 @@
 ---
 layout: default
 title: CurveZMQ Key Generation
+parent: Secure Client Server Setup 
 nav_order: 1
 ---
 ## Curve Key Generation

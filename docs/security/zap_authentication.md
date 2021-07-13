@@ -1,6 +1,7 @@
 ---
 layout: default
 title: ZAP Authentication
+parent: Secure Client Server Setup
 nav_order: 3
 ---
 
