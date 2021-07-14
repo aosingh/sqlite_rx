@@ -38,7 +38,8 @@ Run the following command
  curve-keygen --mode=server
 ```
 
-Curve Key Generation uses an OpenSSH like directory `~/.curve`. You should see the corresponding certificates generated
+Curve Key Generation uses an OpenSSH like directory `~/.curve`. You should see the certificates generated 
+at this location.
 
 ```text
 cd ~/.curve
@@ -50,9 +51,9 @@ ls -lrt
 drwx------  2 abhishek  staff   68 Oct 24 15:13 authorized_clients
 ```
 
-Notice, in `server` mode, the script also creates a directory called `authorized_clients`
-This will be used in case you want the server to respond to queries only from known clients. 
-You will need to place the client's public keys in this directory. 
+Notice in `server` mode, the script also creates a directory called `authorized_clients`
+This will be used when you want the server to respond to only known clients. 
+You will place all authorized clients' public keys in this directory. 
 
 ## Generate Client's private and public keys
 
@@ -61,7 +62,6 @@ curve-keygen --mode=client
 ```
 
 ```text
-
 cd ~/.curve
 
 ls -lrt

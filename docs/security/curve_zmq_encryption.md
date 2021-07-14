@@ -6,9 +6,7 @@ nav_order: 2
 ---
 
 ## CurveZMQ Encryption
-CurveZMQ uses the Curve25519 elliptic curve, which was designed by Daniel J. Bernstein to achieve good performance with short key sizes (256 bits). The protocol establishes short-term session keys for every connection to achieve perfect forward security. Session keys are held in memory and destroyed when the connection is closed. CurveZMQ also addresses replay attacks, amplification attacks, MIM attacks, key thefts, client identification, and various denial-of-service attacks. These are inherited from CurveCP, and are explained later.
-
-To enable CurveZMQ encryption, start the server with the correct certificate name as it appears in `~/.curve` directory. 
+CurveZMQ uses the Curve25519 elliptic curve, which was designed by Daniel J. Bernstein to achieve good performance with short key sizes (256 bits). The protocol establishes short-term session keys for every connection to achieve perfect forward security. Session keys are held in memory and destroyed when the connection is closed. CurveZMQ also addresses replay attacks, amplification attacks, MIM attacks, key thefts, client identification, and various denial-of-service attacks. These are inherited from CurveCP.
 
 ## Server
 
@@ -34,7 +32,7 @@ if __name__ == "__main__":
 ````
 
 ```text
-python server.py 
+>> python server.py 
 
 2021-07-13 23:27:04,798 - INFO - [sqlite_rx.server:run:190] Setting up signal handlers
 2021-07-13 23:27:04,799 - INFO - [sqlite_rx.server:setup:47] Python Platform CPython
@@ -74,12 +72,9 @@ with client:
 ```
 
 ```text
-
-python client.py
+>> python client.py
 
 {'error': None, 'items': []}
-
-
 ```
 
 
