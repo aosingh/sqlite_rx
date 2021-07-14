@@ -6,24 +6,7 @@ nav_order: 1
 ---
 ## Curve Key Generation
 
-CurveZMQ is a protocol for secure messaging across the Internet that closely follows the CurveCP security handshake.`curve-keygen` is a script (packaged with sqlite_rx) that is modeled after `ssh-keygen` to generate public and private keys.
-
-Implementation idea is borrowed from https://github.com/danielrobbins/ibm-dw-zeromq-2/blob/master/curve-keygen
-
-Curve Key Generation uses an OpenSSH like directory: `~/.curve`
-
-We need public keys for both the server and clients.
-
-### Key ID naming
-
-We follow the naming convention as shown below.
-
-```python
-server_key_id = "id_server_{}_curve".format(socket.gethostname())
-client_key_id = "id_client_{}_curve".format(socket.gethostname())
-```
-
-Run the script with the option `--help`
+CurveZMQ is a protocol for secure messaging across the Internet that closely follows the CurveCP security handshake.`curve-keygen` is a script that is modeled after `ssh-keygen` to generate public and private keys.
 
 ```bash
 curve-keygen --help
@@ -33,21 +16,31 @@ optional arguments:
   -h, --help   show this help message and exit
   --mode MODE  `client` or `server`
 ```
+Implementation idea is borrowed from [https://github.com/danielrobbins/ibm-dw-zeromq-2/blob/master/curve-keygen](https://github.com/danielrobbins/ibm-dw-zeromq-2/blob/master/curve-keygen)
 
 
-### Generate Server public and private keys
+## Certificate naming
+
+We need 2 certificates one for the server and one for the client. The client must know Server's public key to make a 
+Curve connection. We follow the naming convention as shown below.
+
+```python
+server_key_id = "id_server_{}_curve".format(socket.gethostname())
+client_key_id = "id_client_{}_curve".format(socket.gethostname())
+```
+
+
+## Generate Server public and private keys
 
 Run the following command
 
 ```bash
-
  curve-keygen --mode=server
-
 ```
 
-You should see the keys generated 
+Curve Key Generation uses an OpenSSH like directory `~/.curve`. You should see the corresponding certificates generated
 
-```
+```text
 cd ~/.curve
 
 ls -lrt
@@ -61,13 +54,13 @@ Notice, in `server` mode, the script also creates a directory called `authorized
 This will be used in case you want the server to respond to queries only from known clients. 
 You will need to place the client's public keys in this directory. 
 
-### Generate Client's private and public keys
+## Generate Client's private and public keys
 
 ```bash
 curve-keygen --mode=client
 ```
 
-```bash
+```text
 
 cd ~/.curve
 
