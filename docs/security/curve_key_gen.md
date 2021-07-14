@@ -53,7 +53,7 @@ drwx------  2 abhishek  staff   68 Oct 24 15:13 authorized_clients
 
 Notice in `server` mode, the script also creates a directory called `authorized_clients`
 This will be used when you want the server to respond to only known clients. 
-You will place all authorized clients' public keys in this directory. 
+You will place authorized clients' public keys in this directory. 
 
 ## Generate Client's private and public keys
 
