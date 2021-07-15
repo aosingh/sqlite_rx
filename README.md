@@ -6,7 +6,9 @@
 [![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)]((https://www.python.org/downloads/release/python-390/))
 [![PyPy3.6](https://img.shields.io/badge/python-PyPy3.6-blue.svg)](https://www.pypy.org/index.html)
 
-Consider this README as a getting started guide. For detailed documentation refer [https://aosingh.github.io/sqlite_rx/](https://aosingh.github.io/sqlite_rx/)
+Consider this README as a getting started guide. 
+
+For detailed documentation refer [https://aosingh.github.io/sqlite_rx/](https://aosingh.github.io/sqlite_rx/)
 
 # Introduction
 
@@ -27,7 +29,7 @@ Key Features
 # Install
 
 ```commandline
-pip install sqlite_rx
+pip install -U sqlite_rx
 ```
 
 ## Supported OS 
@@ -39,11 +41,13 @@ pip install sqlite_rx
 - CPython 3.6, 3.7, 3.8, 3.9
 - PyPy3.6
 
+
 # Server
 
 `SQLiteServer` runs in a single thread and follows an event-driven concurrency model (using `tornado's` event loop) which minimizes the cost of concurrent client connections. Following snippet shows how you can start the server process.
 
 ```python
+# server.py
 from sqlite_rx.server import SQLiteServer
 
 def main():
@@ -64,6 +68,7 @@ if __name__ == '__main__':
 
 ```
 
+
 # Client
 
 The following snippet shows how you can instantiate an `SQLiteClient` and execute a simple `CREATE TABLE` query.
@@ -81,7 +86,9 @@ with client:
 
 ```
 
-```python
-{'error': None, 
- 'items': []}
+```text
+>> python client.py
+
+{'error': None, 'items': []}
 ```
+
