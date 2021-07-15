@@ -6,9 +6,8 @@
 [![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)]((https://www.python.org/downloads/release/python-390/))
 [![PyPy3.6](https://img.shields.io/badge/python-PyPy3.6-blue.svg)](https://www.pypy.org/index.html)
 
-Consider this README as a getting started guide. 
 
-For detailed documentation refer [https://aosingh.github.io/sqlite_rx/](https://aosingh.github.io/sqlite_rx/)
+Documentation: [https://aosingh.github.io/sqlite_rx/](https://aosingh.github.io/sqlite_rx/)
 
 # Introduction
 
@@ -48,6 +47,7 @@ pip install -U sqlite_rx
 
 ```python
 # server.py
+
 from sqlite_rx.server import SQLiteServer
 
 def main():
