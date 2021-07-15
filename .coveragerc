@@ -2,14 +2,20 @@
 parallel = True
 branch = False
 source = sqlite_rx
-concurrency = multiprocessing
+concurrency =
+    thread
+    multiprocessing
+debug = 
+    multiproc
 omit =
     /*/tests/*
     .env/*
     ./sqlite_rx/cli/__init__.py
     /home/travis/virtualenv/*
-
-[report]
+    ./sqlite_rx/run_client.py
+    ./sqlite_rx/start_server.py
+# plugins = 
+#   billiard_coverage_plugin
 
 [html]
 directory = htmlcov

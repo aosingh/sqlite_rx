@@ -1,4 +1,5 @@
 import os
+import platform
 import signal
 import pytest
 
@@ -24,12 +25,19 @@ def plain_client():
     server = SQLiteServer(bind_address="tcp://127.0.0.1:5003",
                           database=":memory:",
                           auth_config=auth_config)
+    
+    # server.daemon = True
 
     client = SQLiteClient(connect_address="tcp://127.0.0.1:5003")
 
     server.start()
+    # server.join()
     LOG.info("Started Test SQLiteServer")
     yield client
-    os.kill(server.pid, signal.SIGINT)
+    if platform.system().lower() == 'windows':
+        os.system("taskkill  /F /pid "+str(server.pid))
+    else:
+        os.kill(server.pid, signal.SIGINT)
     server.join()
-    client.shutdown()
+    client.cleanup()
+    

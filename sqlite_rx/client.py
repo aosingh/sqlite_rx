@@ -3,7 +3,6 @@ import os
 import socket
 import threading
 import zlib
-from pprint import pformat
 
 import msgpack
 import zmq
@@ -104,9 +103,8 @@ class SQLiteClient(threading.local):
                 query: str,
                 *args,
                 **kwargs) -> dict:
-        """
-        Send the `query` and the parameters to a remote SQLiteServer instance which will then
-        execute the query.
+        """Synchronous which will send the `query` and the parameters to a remote SQLiteServer instance,
+        wait for the response and return the response to the caller.
 
         Important keyword arguments are as follows:
 
@@ -162,11 +160,10 @@ class SQLiteClient(threading.local):
                 socks = dict(self._poller.poll(request_timeout))
                 if socks.get(self._client) == zmq.POLLIN:
                     response = self._recv_response()
-                    LOG.debug("Response %s", pformat(response))
                     return response
                 else:
                     LOG.warning("No response from server, retrying...")
-                    self.shutdown()
+                    self.cleanup()
                     request_retries -= 1
                     if request_retries == 0:
                         LOG.error("Server seems to be offline, abandoning")
@@ -176,18 +173,24 @@ class SQLiteClient(threading.local):
                     self._send_request(request)
 
         raise SQLiteRxConnectionError("No response after retrying. Abandoning Request")
+    
+    def __enter__(self):
+        return self
+    
+    def __exit__(self, exc_type, exc_value, traceback):
+        self.cleanup()
 
-    def shutdown(self):
+    def cleanup(self):
         try:
             self._client.setsockopt(zmq.LINGER, 0)
             self._client.close()
             self._poller.unregister(self._client)
         except zmq.ZMQError as e:
             if e.errno in (zmq.EINVAL,
-                          zmq.EPROTONOSUPPORT,
-                          zmq.ENOCOMPATPROTO,
-                          zmq.EADDRINUSE,
-                          zmq.EADDRNOTAVAIL,):
+                           zmq.EPROTONOSUPPORT,
+                           zmq.ENOCOMPATPROTO,
+                           zmq.EADDRINUSE,
+                           zmq.EADDRNOTAVAIL,):
                 LOG.error("ZeroMQ Transportation endpoint was not setup")
 
             elif e.errno in (zmq.ENODEV, zmq.ENOTSOCK,):

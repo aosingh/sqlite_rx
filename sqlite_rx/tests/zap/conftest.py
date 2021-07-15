@@ -1,6 +1,7 @@
 import pytest
 
 import os
+import platform
 import socket
 import shutil
 import sqlite3
@@ -50,11 +51,16 @@ def zap_client():
                               client_curve_id=client_key_id,
                               curve_dir=curve_dir,
                               use_encryption=True)
+        
+
         server.start()
         LOG.info("Started Test SQLiteServer")
         yield client
-        os.kill(server.pid, signal.SIGINT)
+        if platform.system().lower() == 'windows':
+            os.system("taskkill  /F /pid "+str(server.pid))
+        else:
+            os.kill(server.pid, signal.SIGINT)
         server.join()
-        client.shutdown()
+        client.cleanup()
 
 
