@@ -13,4 +13,5 @@ example.db
 venv/
 start_server.py
 run_client.py
+curve_client.py
 
