@@ -4,7 +4,7 @@ title: SQLite database backup
 nav_order: 5
 ---
 
-Database backup can be scheduled to run regularly during Server startup. Under the hood, this uses SQLite's Online [Backup](https://docs.python.org/3/library/sqlite3.html#sqlite3.Connection.backup) API. The Backup function runs as a daemon thread and it makes backup even while the database is being accessed by other clients. 
+Database backup can be scheduled to run regularly during Server startup. Under the hood, this uses SQLite's online [backup](https://docs.python.org/3/library/sqlite3.html#sqlite3.Connection.backup) API. The Backup function runs as a daemon thread and makes backup even while the database is being accessed by other clients. 
 
 You can specify `backup_interval` (time in seconds) to control how frequently backup should be performed. 
 

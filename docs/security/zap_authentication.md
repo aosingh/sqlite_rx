@@ -7,15 +7,11 @@ nav_order: 3
 
 ## ZAP Authentication
 
-ZeroMQ Authentication protocol
+ZeroMQ Authentication protocol.
+The use case for ZAP is a set of servers that need authentication of remote clients. Setting `use_zap_auth = True` will restrict connections to clients whose public keys are in the `~/.curve/authorized_clients/` directory. 
+Set this to `False` to allow any client with the server's public key to connect, without requiring the server to possess each client's public key.
 
-The use case for ZAP is a set of servers that need authentication of remote clients
-
-This is controlled by the parameter `use_zap_auth ` 
-Setting `use_zap_auth = True` will restrict connections to clients whose public keys are in the `~/.curve/authorized_clients/` directory. Set this to `False` to allow any client with the server's
-public key to connect, without requiring the server to possess each client's public key.
-
-Place the client's public key at the server's `~/.curve/authorized_clients/` directory. 
+Place client's public key at the server's `~/.curve/authorized_clients/` directory. 
 
 ```bash
 cd ~/.curve/authorized_clients
@@ -24,7 +20,7 @@ ls -lrt
 
 -rw-------  1 abhishek  staff  364 Oct 24 17:28 id_client_Abhisheks-MBP_curve.key
 ```
-Now, let's start the server script
+## Server
 
 ```python
 import socket
@@ -37,31 +33,36 @@ def main():
                           use_zap_auth=True,
                           server_curve_id=server_key_id,
                           database=":memory:")
-    try:
-       server.start()
-    except KeyBoardInterrupt:
-       server.stop()
-
+    
+    server.start()
+    server.join()
 
 if __name__ == "__main__":
     main()
 ```
 
-```bash
+```text
+>> python server.py
 
-2019-10-24 17:32:15,550 - INFO     server.py:41  Setting up encryption using CurveCP
-2019-10-24 17:32:15,550 - INFO     auth.py:233  Secure setup completed using on tcp://127.0.0.1:5001 using curve key id_server_Abhisheks-MBP_curve.
-2019-10-24 17:32:15,551 - INFO     server.py:41  ZAP enabled. 
- Authorizing clients in /Users/abhishek/.curve/authorized_clients.
-2019-10-24 17:32:15,553 - INFO     server.py:41  Server Event Loop started
+2021-07-14 21:28:54,204 - INFO - [sqlite_rx.server:run:190] Setting up signal handlers
+2021-07-14 21:28:54,205 - INFO - [sqlite_rx.server:setup:47] Python Platform CPython
+2021-07-14 21:28:54,206 - INFO - [sqlite_rx.server:setup:48] libzmq version 4.3.4
+2021-07-14 21:28:54,206 - INFO - [sqlite_rx.server:setup:49] pyzmq version 22.1.0
+2021-07-14 21:28:54,207 - INFO - [sqlite_rx.server:setup:50] tornado version 6.1
+2021-07-14 21:28:54,209 - INFO - [sqlite_rx.server:stream:89] Setting up encryption using CurveCP
+2021-07-14 21:28:54,210 - INFO - [sqlite_rx.auth:setup_secure_server:232] Secure setup completed using on tcp://127.0.0.1:5000 using curve key id_server_Abhisheks-MacBook-Pro.local_curve
+2021-07-14 21:28:54,211 - INFO - [sqlite_rx.server:stream:97] ZAP enabled. Authorizing clients in /Users/as/.curve/authorized_clients.
+2021-07-14 21:28:54,217 - INFO - [sqlite_rx.server:run:197] SQLiteServer version 1.0.2
+2021-07-14 21:28:54,218 - INFO - [sqlite_rx.server:run:198] SQLiteServer (Tornado) i/o loop started..
+2021-07-14 21:28:54,218 - INFO - [sqlite_rx.server:run:203] Ready to accept client connections on tcp://127.0.0.1:5000
 
 ```
-Now, let's run the client 
+## Client
 
 ```python
+# client.py
 
 import socket
-from pprint import pprint
 
 from sqlite_rx.client import SQLiteClient
 
@@ -73,17 +74,13 @@ client = SQLiteClient(connect_address="tcp://127.0.0.1:5001",
                       client_curve_id=client_key_id,
                       use_encryption=True)
 
-result = client.execute("CREATE TABLE stocks_2 (date text, trans text, symbol text, qty real, price real)")
-pprint("Result is %s" % result)
+with client:
+    result = client.execute("CREATE TABLE stocks_2 (date text, trans text, symbol text, qty real, price real)")
 
 ```
 
-```bash
-python client.py
-2019-10-24 17:34:06,646 - INFO     client.py:58  Initializing Client
-2019-10-24 17:34:06,647 - INFO     auth.py:289  Client connecting to tcp://127.0.0.1:5001 (key id_server_Abhisheks-MBP_curve) using curve key 'id_client_Abhisheks-MBP_curve'.
-2019-10-24 17:34:06,647 - INFO     client.py:67  client python@Abhisheks-MBP_140736436749248 connected successfully
-2019-10-24 17:34:06,647 - INFO     client.py:71  Executing query CREATE TABLE stocks_2 (date text, trans text, symbol text, qty real, price real) for client python@Abhisheks-MBP_140736436749248
-2019-10-24 17:34:06,647 - INFO     client.py:95  Preparing to send request
-"Result is {'items': [], 'error': None}"
+```text
+>> python client.py
+
+{'error': None, 'items': []}
 ```
