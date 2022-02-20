@@ -1,4 +1,4 @@
-FROM python:3-alpine as base
+FROM python:3.11.0a5-alpine as base
 
 WORKDIR /svc
 
@@ -9,7 +9,7 @@ RUN pip install Cython
 RUN pip install wheel && pip wheel --wheel-dir=/svc/wheels sqlite_rx
 
 
-FROM python:3-alpine
+FROM python:3.11.0a5-alpine
 RUN apk update && apk add libzmq
 
 COPY --from=base /svc /svc
