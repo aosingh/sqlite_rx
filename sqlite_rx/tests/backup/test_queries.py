@@ -77,7 +77,8 @@ def test_table_rows_insertion(plain_client):
         backup_connection = sqlite3.connect(database=backup_database,
                                             isolation_level=None,
                                             check_same_thread=False)                      
-        assert os.path.exists(backup_database) == True
+        assert os.path.exists(backup_database) is True
+        assert os.path.getsize(backup_database) == os.path.getsize(plain_client.main_database)
         result = backup_connection.execute("SELECT * FROM stocks").fetchall()
         assert len(result) == 27
     

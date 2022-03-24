@@ -17,7 +17,7 @@ logging.config.dictConfig(get_default_logger_settings(level="DEBUG"))
 
 LOG = logging.getLogger(__file__)
 
-backup_event = namedtuple('backup_event', ('client', 'backup_database'))
+backup_event = namedtuple('backup_event', ('client', 'backup_database', 'main_database'))
 
 
 @pytest.fixture(scope="module")
@@ -46,7 +46,7 @@ def plain_client():
         
         client = SQLiteClient(connect_address="tcp://127.0.0.1:5003")
 
-        event = backup_event(client=client, backup_database=backup_db_file)
+        event = backup_event(client=client, backup_database=backup_db_file, main_database=main_db_file)
 
         server.start()
 
