@@ -15,7 +15,7 @@ LICENSE = 'MIT License'
 AUTHOR = 'Abhishek Singh'
 MAINTAINER = 'Abhishek Singh'
 MAINTAINER_EMAIL = 'abhishek.singh20141@gmail.com'
-DESCRIPTION = ('Python SQLite Client and Server')
+DESCRIPTION = 'Python SQLite Client and Server'
 URL = 'https://github.com/aosingh/sqlite_rx'
 
 PACKAGES = ['sqlite_rx']

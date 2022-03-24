@@ -71,7 +71,7 @@ def test_table_rows_insertion(plain_client):
     assert result == expected_result
 
     if sys.version_info.major == 3 and sys.version_info.minor >= 7:
-        time.sleep(1)  # wait for the backup thread to finish backing up.
+        time.sleep(2)  # wait for the backup thread to finish backing up.
 
         backup_database = plain_client.backup_database
         backup_connection = sqlite3.connect(database=backup_database,
