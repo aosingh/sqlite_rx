@@ -199,16 +199,10 @@ class KeyMonkey:
         """
 
         self.my_id = key_id
-        self.curvedir = destination_dir if destination_dir else os.path.join(
-            os.path.expanduser("~"), ".curve")
-        self.public_key = os.path.join(
-            self.curvedir, "{}.key".format(self.my_id))
-        self.private_key = os.path.join(
-            self.curvedir,
-            "{}.key_secret".format(
-                self.my_id))
-        self.authorized_clients_dir = os.path.join(
-            self.curvedir, "authorized_clients")
+        self.curvedir = destination_dir if destination_dir else os.path.join(os.path.expanduser("~"), ".curve")
+        self.public_key = os.path.join(self.curvedir, "{}.key".format(self.my_id))
+        self.private_key = os.path.join(self.curvedir, "{}.key_secret".format(self.my_id))
+        self.authorized_clients_dir = os.path.join(self.curvedir, "authorized_clients")
 
     def setup_secure_server(self,
                             server,
@@ -225,9 +219,7 @@ class KeyMonkey:
 
         """
         try:
-            foo, bar = zmq.auth.load_certificate(self.private_key)
-            server.curve_publickey = foo
-            server.curve_secretkey = bar
+            server.curve_publickey, server.curve_secretkey = zmq.auth.load_certificate(self.private_key)
             server.curve_server = True
             LOG.info("Secure setup completed using on %s using curve key %s", bind_address, self.my_id)
             return server
@@ -259,17 +251,14 @@ class KeyMonkey:
 
         """
         try:
-            foo, bar = zmq.auth.load_certificate(self.private_key)
-            client.curve_publickey = foo
-            client.curve_secretkey = bar
+            client.curve_publickey, client.curve_secretkey = zmq.auth.load_certificate(self.private_key)
         except IOError:
             LOG.exception("Couldn't load the client private key: %s", self.private_key)
             raise
         else:
             # Clients need server's public key for encryption
             try:
-                foo, _ = zmq.auth.load_certificate(os.path.join(self.curvedir, f"{servername}.key"))
-                client.curve_serverkey = foo
+                client.curve_serverkey, _ = zmq.auth.load_certificate(os.path.join(self.curvedir, f"{servername}.key"))
             except IOError:
                 LOG.exception(
                     "Couldn't load the server public key %s ", os.path.join(self.curvedir, f"{servername}.key"))

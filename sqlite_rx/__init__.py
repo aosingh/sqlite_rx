@@ -1,10 +1,9 @@
-__version__ = "1.0.2"
+__version__ = "1.0.3"
 __author__ = "Abhishek Singh"
-__authoremail__ = "aosingh@asu.edu"
+__authoremail__ = "abhishek.singh20141@gmail.com"
 
 
 def get_default_logger_settings(level: str = "DEBUG"):
-
     return {
         'version': 1,
         'disable_existing_loggers': False,
