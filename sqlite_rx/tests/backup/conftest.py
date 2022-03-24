@@ -33,7 +33,7 @@ def plain_client():
         main_db_file = os.path.join(base_dir, 'main.db')
         backup_db_file = os.path.join(base_dir, 'backup.db')
 
-        if (sys.version_info.major == 3 and sys.version_info.minor >= 7):
+        if sys.version_info.major == 3 and sys.version_info.minor >= 7:
             server = SQLiteServer(bind_address="tcp://127.0.0.1:5003",
                                   database=main_db_file,
                                   auth_config=auth_config,
@@ -41,8 +41,8 @@ def plain_client():
                                   backup_interval=1)
         else:
             server = SQLiteServer(bind_address="tcp://127.0.0.1:5003",
-                                 database=main_db_file,
-                                 auth_config=auth_config)
+                                  database=main_db_file,
+                                  auth_config=auth_config)
         
         client = SQLiteClient(connect_address="tcp://127.0.0.1:5003")
 
