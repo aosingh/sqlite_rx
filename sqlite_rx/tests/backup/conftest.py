@@ -9,7 +9,8 @@ import sqlite3
 import logging.config
 
 from collections import namedtuple
-from sqlite_rx import backup, get_default_logger_settings
+from sqlite_rx import get_default_logger_settings
+from sqlite_rx.backup import is_backup_supported
 from sqlite_rx.client import SQLiteClient
 from sqlite_rx.server import SQLiteServer
 
@@ -33,7 +34,7 @@ def plain_client():
         main_db_file = os.path.join(base_dir, 'main.db')
         backup_db_file = os.path.join(base_dir, 'backup.db')
 
-        if sys.version_info.major == 3 and sys.version_info.minor >= 7:
+        if is_backup_supported():
             server = SQLiteServer(bind_address="tcp://127.0.0.1:5003",
                                   database=main_db_file,
                                   auth_config=auth_config,

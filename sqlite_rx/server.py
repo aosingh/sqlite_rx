@@ -146,6 +146,14 @@ class SQLiteServer(SQLiteZMQProcess):
             if not (sys.version_info.major == 3 and sys.version_info.minor >= 7):
                 LOG.warning("Backup requires Python 3.7 or higher")
                 raise SQLiteRxBackUpError("SQLite backup requires Python 3.7 or higher")
+
+            if sys.platform.startswith('win'):
+                LOG.warning("Backup is not supported on Windows")
+                raise SQLiteRxBackUpError("SQLite backup is not supported on Windows")
+
+            if sys.platform == 'darwin' and platform.python_implementation().lower() == 'pypy':
+                LOG.warning("Backup is not supported on MacOS for PyPy python implementation")
+                raise SQLiteRxBackUpError("SQLite backup is not supported on MacOS for PyPy python implementation")
             
             sqlite_backup = SQLiteBackUp(src=database, target=backup_database)
             self.back_up_recurring_thread = RecurringTimer(function=sqlite_backup, interval=backup_interval)
