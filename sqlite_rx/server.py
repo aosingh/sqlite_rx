@@ -159,7 +159,6 @@ class SQLiteServer(SQLiteZMQProcess):
             self.back_up_recurring_thread = RecurringTimer(function=sqlite_backup, interval=backup_interval)
             self.back_up_recurring_thread.daemon = True
 
-
     def setup(self):
         """
         Start a zmq.REP socket stream and register a callback :class: `sqlite_rx.server.QueryStreamHandler`
@@ -177,10 +176,8 @@ class SQLiteServer(SQLiteZMQProcess):
         self.rep_stream.on_recv(QueryStreamHandler(self.rep_stream,
                                                    self._database,
                                                    self._auth_config))
-    
 
     def handle_signal(self, signum, frame):
-
         LOG.info("SQLiteServer %s PID %s received %r", self, self.pid, signum)
         LOG.info("SQLiteServer Shutting down")
 
@@ -190,10 +187,8 @@ class SQLiteServer(SQLiteZMQProcess):
         
         if self.back_up_recurring_thread:
             self.back_up_recurring_thread.cancel()
-        
         os._exit(os.EX_OK)
 
-        
     def run(self):
         LOG.info("Setting up signal handlers")
 

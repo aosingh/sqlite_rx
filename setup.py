@@ -20,11 +20,12 @@ URL = 'https://github.com/aosingh/sqlite_rx'
 
 PACKAGES = ['sqlite_rx']
 
-INSTALL_REQUIRES = ['msgpack==1.0.3',
-                    'pyzmq==22.3.0',
-                    'tornado==6.1',
-                    'click==8.0.4',
-                    'billiard==3.6.4.0']
+INSTALL_REQUIRES = ['msgpack==1.0.4',
+                    'pyzmq==23.2.0',
+                    'tornado==6.2',
+                    'billiard==4.0.0']
+
+CLI_REQUIRES = ['click==8.1.3', 'rich==12.0.1', 'pygments==2.11.2']
 
 TEST_REQUIRE = ['pytest==7.1.1',
                 'coverage==6.3.2']
@@ -38,10 +39,10 @@ classifiers = [
     'Intended Audience :: System Administrators',
     'License :: OSI Approved :: MIT License',
     'Programming Language :: Python :: 3 :: Only',
-    'Programming Language :: Python :: 3.6',
     'Programming Language :: Python :: 3.7',
     'Programming Language :: Python :: 3.8',
     'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
     'Operating System :: POSIX :: Linux',
     'Operating System :: Unix',
     'Operating System :: Microsoft :: Windows',
@@ -65,8 +66,12 @@ setup(
     scripts=['bin/curve-keygen'],
     entry_points={
       'console_scripts': [
-          'sqlite-server=sqlite_rx.cli.server:main'
+          'sqlite-server=sqlite_rx.cli.server:main',
+          'sqlite-client=sqlite_rx.cli.client:main'
       ]
+    },
+    extras_require={
+      'cli': CLI_REQUIRES
     },
     packages=find_packages(exclude=("tests",)),
     package_dir={'sqlite_rx': 'sqlite_rx'},

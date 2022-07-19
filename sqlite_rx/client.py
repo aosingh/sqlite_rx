@@ -192,7 +192,7 @@ class SQLiteClient(threading.local):
                            zmq.EADDRNOTAVAIL,):
                 LOG.error("ZeroMQ Transportation endpoint was not setup")
 
-            elif e.errno in (zmq.ENODEV, zmq.ENOTSOCK,):
+            elif e.errno in (zmq.ENOTSOCK,):
                 LOG.error("ZeroMQ request was made against a non-existent device or invalid socket")
 
             elif e.errno in (zmq.ETERM, zmq.EMTHREAD,):
