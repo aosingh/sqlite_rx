@@ -23,7 +23,7 @@ PACKAGES = ['sqlite_rx']
 INSTALL_REQUIRES = ['msgpack==1.0.4',
                     'pyzmq==23.2.0',
                     'tornado==6.2',
-                    'billiard==4.0.0']
+                    'billiard==4.0.2']
 
 CLI_REQUIRES = ['click==8.1.3', 'rich==12.0.1', 'pygments==2.11.2']
 
