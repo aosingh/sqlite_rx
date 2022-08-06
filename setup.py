@@ -50,6 +50,13 @@ classifiers = [
 ]
 keywords = 'sqlite client server fast secure'
 
+project_urls = {"Documentation" : "https://aosingh.github.io/sqlite_rx/",
+                "Source":  "https://github.com/aosingh/sqlite_rx",
+                "Bug Tracker": "https://github.com/aosingh/sqlite_rx/issues",
+                "CI": "https://github.com/aosingh/sqlite_rx/actions",
+                "Release Notes": "https://github.com/aosingh/sqlite_rx/releases",
+                "License": "https://github.com/aosingh/sqlite_rx/blob/master/LICENSE"}
+
 
 setup(
     name=DISTNAME,
@@ -62,6 +69,7 @@ setup(
     description=DESCRIPTION,
     license=LICENSE,
     url=URL,
+    project_urls=project_urls,
     version=VERSION,
     scripts=['bin/curve-keygen'],
     entry_points={

@@ -1,4 +1,4 @@
-FROM python:3.10.1-slim as base
+FROM python:3.10.5-slim as base
 
 COPY . /sqlite_rx
 
@@ -10,7 +10,7 @@ RUN pip install wheel && pip wheel --wheel-dir=/svc/wheels /sqlite_rx[cli]
 RUN rm -rf /sqlite_rx
 
 
-FROM python:3.10.1-slim
+FROM python:3.10.5-slim
 
 COPY --from=base /svc /svc
 WORKDIR /svc
