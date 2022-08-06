@@ -16,7 +16,7 @@ def is_backup_supported():
     if sys.platform.startswith('win'):
         return False
 
-    if sys.platform == 'darwin' and platform.python_implementation().lower() == 'pypy':
+    if platform.python_implementation().lower() == 'pypy':
         return False
 
     return True
@@ -29,7 +29,7 @@ class SQLiteBackUp:
         self.target = target
         self.pages = pages
 
-    def __call__(self, *args: Any, **kwds: Any) -> Any:
+    def __call__(self, *args: Any, **kwargs: Any) -> Any:
 
         def progress(status, remaining, total):
             copied = total - remaining
