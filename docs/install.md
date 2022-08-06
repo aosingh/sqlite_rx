@@ -4,12 +4,19 @@ title: Install
 nav_order: 2
 ---
 
-## Release v1.0.2 Installation
+## Release v1.1.1 Installation
 
 You can install `sqlite_rx` via the Python Package Index (PyPI) using `pip`
 
 ```commandline
 pip install -U sqlite_rx
+
+```
+
+Additionally, to install CLI dependencies use the following command
+
+```commandline
+pip install -U 'sqlite-rx[cli]'
 ```
 
 ## Supported OS 
