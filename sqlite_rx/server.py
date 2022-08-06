@@ -151,8 +151,8 @@ class SQLiteServer(SQLiteZMQProcess):
                 LOG.warning("Backup is not supported on Windows")
                 raise SQLiteRxBackUpError("SQLite backup is not supported on Windows")
 
-            if sys.platform == 'darwin' and platform.python_implementation().lower() == 'pypy':
-                LOG.warning("Backup is not supported on MacOS for PyPy python implementation")
+            if platform.python_implementation().lower() == 'pypy':
+                LOG.warning("Backup is not supported on PyPy python implementation")
                 raise SQLiteRxBackUpError("SQLite backup is not supported on MacOS for PyPy python implementation")
             
             sqlite_backup = SQLiteBackUp(src=database, target=backup_database)
