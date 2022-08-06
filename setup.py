@@ -80,5 +80,5 @@ setup(
     include_package_data=True,
     classifiers=classifiers,
     keywords=keywords,
-    python_requires='>=3.6'
+    python_requires='>=3.7'
 )
