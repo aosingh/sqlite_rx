@@ -1,19 +1,16 @@
-FROM python:3-alpine as base
+FROM python:3.10.1-slim as base
 
 COPY . /sqlite_rx
 
 WORKDIR /svc
 
-RUN apk update && apk add build-base libzmq musl-dev zeromq-dev
-
 RUN pip install --upgrade pip
 RUN pip install Cython
-RUN pip install wheel && pip wheel --wheel-dir=/svc/wheels /sqlite_rx
+RUN pip install wheel && pip wheel --wheel-dir=/svc/wheels /sqlite_rx[cli]
 RUN rm -rf /sqlite_rx
 
 
-FROM python:3-alpine
-RUN apk update && apk add libzmq
+FROM python:3.10.1-slim
 
 COPY --from=base /svc /svc
 WORKDIR /svc
