@@ -10,7 +10,6 @@ You can install `sqlite_rx` via the Python Package Index (PyPI) using `pip`
 
 ```commandline
 pip install -U sqlite_rx
-
 ```
 
 Additionally, to install CLI dependencies use the following command
