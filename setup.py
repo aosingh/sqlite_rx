@@ -11,33 +11,41 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 
 VERSION = __version__
 DISTNAME = 'sqlite_rx'
-LICENSE = 'GNU GPLv3'
+LICENSE = 'MIT License'
 AUTHOR = 'Abhishek Singh'
 MAINTAINER = 'Abhishek Singh'
-MAINTAINER_EMAIL = 'aosingh@asu.edu'
-DESCRIPTION = ('Python SQLite Client and Server')
+MAINTAINER_EMAIL = 'abhishek.singh20141@gmail.com'
+DESCRIPTION = 'Python SQLite Client and Server'
 URL = 'https://github.com/aosingh/sqlite_rx'
 
 PACKAGES = ['sqlite_rx']
 
-DEPENDENCIES = ['msgpack', 'pyzmq', 'tornado', 'click', 'billiard']
+INSTALL_REQUIRES = ['msgpack==1.0.4',
+                    'pyzmq==23.2.0',
+                    'tornado==6.2',
+                    'billiard==4.0.2']
+
+CLI_REQUIRES = ['click==8.1.3', 'rich==12.0.1', 'pygments==2.11.2']
+
+TEST_REQUIRE = ['pytest==7.1.1',
+                'coverage==6.3.2']
 
 classifiers = [
+    'Topic :: Database :: Database Engines/Servers',
     'Development Status :: 5 - Production/Stable',
     'Intended Audience :: Education',
     'Intended Audience :: Developers',
     'Intended Audience :: Science/Research',
     'Intended Audience :: System Administrators',
-    'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
+    'License :: OSI Approved :: MIT License',
     'Programming Language :: Python :: 3 :: Only',
-    'Programming Language :: Python :: 3.6',
     'Programming Language :: Python :: 3.7',
     'Programming Language :: Python :: 3.8',
     'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
     'Operating System :: POSIX :: Linux',
     'Operating System :: Unix',
     'Operating System :: Microsoft :: Windows',
-    'Topic :: Database :: Database Engines/Servers',
     'Operating System :: MacOS'
 ]
 keywords = 'sqlite client server fast secure'
@@ -56,15 +64,21 @@ setup(
     url=URL,
     version=VERSION,
     scripts=['bin/curve-keygen'],
-    entry_points = {
+    entry_points={
       'console_scripts': [
-          'sqlite-server=sqlite_rx.cli:main'
+          'sqlite-server=sqlite_rx.cli.server:main',
+          'sqlite-client=sqlite_rx.cli.client:main'
       ]
+    },
+    extras_require={
+      'cli': CLI_REQUIRES
     },
     packages=find_packages(exclude=("tests",)),
     package_dir={'sqlite_rx': 'sqlite_rx'},
-    install_requires=DEPENDENCIES,
+    install_requires=INSTALL_REQUIRES,
+    test_require=TEST_REQUIRE,
     include_package_data=True,
     classifiers=classifiers,
     keywords=keywords,
+    python_requires='>=3.7'
 )

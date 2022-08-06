@@ -4,8 +4,7 @@ import sqlite3
 import os
 import time
 
-from sqlite_rx import backup
-
+from sqlite_rx.backup import is_backup_supported
 sqlite_error_prefix = "sqlite3.OperationalError"
 
 if platform.python_implementation() == "PyPy":
@@ -22,7 +21,6 @@ def test_not_present(plain_client):
     assert type(result) == dict
     assert result == expected_result
     
-
 
 def test_table_creation(plain_client):
     result = plain_client.client.execute('CREATE TABLE stocks (date text, trans text, symbol text, qty real, price real)')
@@ -64,14 +62,14 @@ def test_table_rows_insertion(plain_client):
     expected_result = {'error': None, 'items': [], 'rowcount': 27}
     assert result == expected_result
 
-    if (sys.version_info.major == 3 and sys.version_info.minor >= 7):
-        time.sleep(1) # wait for the backup thread to finish backing up.
+    if is_backup_supported():
+        time.sleep(1)  # wait for the backup thread to finish backing up.
 
         backup_database = plain_client.backup_database
         backup_connection = sqlite3.connect(database=backup_database,
                                             isolation_level=None,
                                             check_same_thread=False)                      
-        assert os.path.exists(backup_database) == True
+        assert os.path.exists(backup_database) is True
         result = backup_connection.execute("SELECT * FROM stocks").fetchall()
         assert len(result) == 27
     

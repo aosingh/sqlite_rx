@@ -53,7 +53,7 @@ class SQLiteClient(threading.local):
         self._context = context or zmq.Context.instance()
         self._connect_address = connect_address
         self._encrypt = use_encryption
-        self.server_curve_id = server_curve_id
+        self.server_curve_id = server_curve_id if server_curve_id else "id_server_{}_curve".format(socket.gethostname())
         client_curve_id = client_curve_id if client_curve_id else "id_client_{}_curve".format(socket.gethostname())
         self._keymonkey = KeyMonkey(client_curve_id, destination_dir=curve_dir)
         self._client = self._init_client()
@@ -62,8 +62,7 @@ class SQLiteClient(threading.local):
         LOG.info("Initializing Client")
         client = self._context.socket(zmq.REQ)
         if self._encrypt:
-            if not self.server_curve_id:
-                raise ValueError("Missing server_curve_id to be used for CurveZMQ Encryption")
+            LOG.debug("requests will be encrypted; will load CurveZMQ keys")
             client = self._keymonkey.setup_secure_client(client, self._connect_address, self.server_curve_id)
         client.connect(self._connect_address)
         self._poller = zmq.Poller()
@@ -193,7 +192,7 @@ class SQLiteClient(threading.local):
                            zmq.EADDRNOTAVAIL,):
                 LOG.error("ZeroMQ Transportation endpoint was not setup")
 
-            elif e.errno in (zmq.ENODEV, zmq.ENOTSOCK,):
+            elif e.errno in (zmq.ENOTSOCK,):
                 LOG.error("ZeroMQ request was made against a non-existent device or invalid socket")
 
             elif e.errno in (zmq.ETERM, zmq.EMTHREAD,):

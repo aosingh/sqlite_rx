@@ -1,9 +1,25 @@
 import logging.config
 import threading
+import platform
 import sqlite3
+import sys
+
 from typing import Any
 
 LOG = logging.getLogger(__name__)
+
+
+def is_backup_supported():
+    if not (sys.version_info.major == 3 and sys.version_info.minor >= 7):
+        return False
+
+    if sys.platform.startswith('win'):
+        return False
+
+    if platform.python_implementation().lower() == 'pypy':
+        return False
+
+    return True
 
 
 class SQLiteBackUp:
@@ -12,9 +28,8 @@ class SQLiteBackUp:
         self.src = src
         self.target = target
         self.pages = pages
-    
-    
-    def __call__(self, *args: Any, **kwds: Any) -> Any:
+
+    def __call__(self, *args: Any, **kwargs: Any) -> Any:
 
         def progress(status, remaining, total):
             copied = total - remaining

@@ -1,0 +1,5 @@
+coverage==6.3.2
+pip
+pytest==7.1.1
+setuptools
+twine
