@@ -1,12 +1,8 @@
 import logging.config
 
 import typing
-import platform
-
-from pprint import pformat
 
 import click
-import click_repl
 import rich.console
 import rich.markup
 import rich.progress

@@ -28,22 +28,11 @@ Key Features
 - Generic authorization policy during server startup
 - Schedule regular backups for on-disk databases
 
-
 # Install
 
 ```commandline
 pip install -U sqlite_rx
 ```
-
-## Supported OS 
-- Linux
-- MacOS
-- Windows
-
-## Supported Python Platforms
-- CPython 3.6, 3.7, 3.8, 3.9
-- PyPy3.6
-
 
 # Server
 
@@ -71,7 +60,6 @@ if __name__ == '__main__':
     main()
 
 ```
-
 
 # Client
 
