@@ -4,7 +4,7 @@ title: Install
 nav_order: 2
 ---
 
-## Release v1.1.2 Installation
+[![PyPI version](https://badge.fury.io/py/sqlite-rx.svg)](https://pypi.python.org/pypi/sqlite-rx) 
 
 You can install `sqlite_rx` via the Python Package Index (PyPI) using `pip`
 
