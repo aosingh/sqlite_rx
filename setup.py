@@ -1,14 +1,20 @@
+import sys
 from os import path
 
 from setuptools import find_packages, setup
 
+
+if sys.version_info < (3, 8):
+    print("Error: sqlite-rx does not support this version of Python.")
+    print("Please upgrade to Python 3.8 or higher.")
+    sys.exit(1)
 
 this_directory = path.abspath(path.dirname(__file__))
 
 with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
-VERSION = '1.1.2'
+VERSION = '1.2.0'
 DISTNAME = 'sqlite_rx'
 LICENSE = 'MIT License'
 AUTHOR = 'Abhishek Singh'
@@ -19,15 +25,15 @@ URL = 'https://github.com/aosingh/sqlite_rx'
 
 PACKAGES = ['sqlite_rx']
 
-INSTALL_REQUIRES = ['msgpack==1.0.4',
-                    'pyzmq==23.2.0',
-                    'tornado==6.2',
-                    'billiard==4.0.2']
+INSTALL_REQUIRES = ['msgpack==1.0.7',
+                    'pyzmq==25.1.1',
+                    'tornado==6.3.3',
+                    'billiard==4.2.0']
 
-CLI_REQUIRES = ['click==8.1.3', 'rich==12.0.1', 'pygments==2.11.2']
+CLI_REQUIRES = ['click==8.1.7', 'rich==13.6.0', 'pygments==2.16.1']
 
-TEST_REQUIRE = ['pytest==7.1.1',
-                'coverage==6.3.2']
+TEST_REQUIRE = ['pytest==7.4.3',
+                'coverage==7.3.2']
 
 classifiers = [
     'Topic :: Database :: Database Engines/Servers',
@@ -38,10 +44,11 @@ classifiers = [
     'Intended Audience :: System Administrators',
     'License :: OSI Approved :: MIT License',
     'Programming Language :: Python :: 3 :: Only',
-    'Programming Language :: Python :: 3.7',
     'Programming Language :: Python :: 3.8',
     'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
     'Operating System :: POSIX :: Linux',
     'Operating System :: Unix',
     'Operating System :: Microsoft :: Windows',
@@ -49,7 +56,7 @@ classifiers = [
 ]
 keywords = 'sqlite client server fast secure'
 
-project_urls = {"Documentation" : "https://aosingh.github.io/sqlite_rx/",
+project_urls = {"Documentation": "https://aosingh.github.io/sqlite_rx/",
                 "Source":  "https://github.com/aosingh/sqlite_rx",
                 "Bug Tracker": "https://github.com/aosingh/sqlite_rx/issues",
                 "CI": "https://github.com/aosingh/sqlite_rx/actions",
@@ -87,5 +94,5 @@ setup(
     include_package_data=True,
     classifiers=classifiers,
     keywords=keywords,
-    python_requires='>=3.7'
+    python_requires='>=3.8'
 )

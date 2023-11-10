@@ -15,11 +15,11 @@ import msgpack
 import zmq
 from sqlite_rx import get_version
 from sqlite_rx.auth import Authorizer, KeyMonkey
-from sqlite_rx.backup import SQLiteBackUp, RecurringTimer
+from sqlite_rx.backup import SQLiteBackUp, RecurringTimer, is_backup_supported
 from sqlite_rx.exception import SQLiteRxBackUpError
 from sqlite_rx.exception import SQLiteRxZAPSetupError
 from tornado import ioloop, version
-from zmq.auth.ioloop import IOLoopAuthenticator
+from zmq.auth.asyncio import AsyncioAuthenticator
 from zmq.eventloop import zmqstream
 
 
@@ -93,7 +93,7 @@ class SQLiteZMQProcess(multiprocessing.Process):
                 if not use_encryption:
                     raise SQLiteRxZAPSetupError("ZAP requires CurveZMQ(use_encryption = True) to be enabled. Exiting")
 
-                self.auth = IOLoopAuthenticator(self.context)
+                self.auth = AsyncioAuthenticator(self.context)
                 LOG.info("ZAP enabled. \n Authorizing clients in %s.", keymonkey.authorized_clients_dir)
                 self.auth.configure_curve(domain="*", location=keymonkey.authorized_clients_dir)
                 self.auth.start()
@@ -143,18 +143,9 @@ class SQLiteServer(SQLiteZMQProcess):
         self.back_up_recurring_thread = None
 
         if backup_database is not None:
-            if not (sys.version_info.major == 3 and sys.version_info.minor >= 7):
-                LOG.warning("Backup requires Python 3.7 or higher")
-                raise SQLiteRxBackUpError("SQLite backup requires Python 3.7 or higher")
+            if not is_backup_supported():
+                raise SQLiteRxBackUpError(f"SQLite backup is not supported on {sys.platform} or {platform.python_implementation()}")
 
-            if sys.platform.startswith('win'):
-                LOG.warning("Backup is not supported on Windows")
-                raise SQLiteRxBackUpError("SQLite backup is not supported on Windows")
-
-            if platform.python_implementation().lower() == 'pypy':
-                LOG.warning("Backup is not supported on PyPy python implementation")
-                raise SQLiteRxBackUpError("SQLite backup is not supported on MacOS for PyPy python implementation")
-            
             sqlite_backup = SQLiteBackUp(src=database, target=backup_database)
             self.back_up_recurring_thread = RecurringTimer(function=sqlite_backup, interval=backup_interval)
             self.back_up_recurring_thread.daemon = True
@@ -187,7 +178,7 @@ class SQLiteServer(SQLiteZMQProcess):
         
         if self.back_up_recurring_thread:
             self.back_up_recurring_thread.cancel()
-        os._exit(os.EX_OK)
+        raise SystemExit()
 
     def run(self):
         LOG.info("Setting up signal handlers")

@@ -1,5 +1,5 @@
-coverage==6.3.2
+coverage==7.3.2
 pip
-pytest==7.1.1
+pytest==7.4.3
 setuptools
 twine
