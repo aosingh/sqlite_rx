@@ -10,8 +10,6 @@ LOG = logging.getLogger(__name__)
 
 
 def is_backup_supported():
-    if not (sys.version_info.major == 3 and sys.version_info.minor >= 7):
-        return False
 
     if sys.platform.startswith('win'):
         return False
