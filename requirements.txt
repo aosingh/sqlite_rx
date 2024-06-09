@@ -1,5 +1,5 @@
 billiard==4.2.0
 click==8.1.7
-msgpack==1.0.7
-pyzmq==25.1.1
-tornado==6.3.3
+msgpack==1.0.8
+pyzmq==26.0.3
+tornado==6.4.1

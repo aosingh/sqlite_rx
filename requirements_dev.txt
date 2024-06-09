@@ -1,5 +1,7 @@
-coverage==7.3.2
+coverage==7.5.3
 pip
-pytest==7.4.3
+build
+wheel
+pytest==8.2.2
 setuptools
 twine
