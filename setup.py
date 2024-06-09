@@ -14,7 +14,7 @@ this_directory = path.abspath(path.dirname(__file__))
 with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
     long_description = f.read()
 
-VERSION = '1.2.0'
+VERSION = '1.2.1'
 DISTNAME = 'sqlite_rx'
 LICENSE = 'MIT License'
 AUTHOR = 'Abhishek Singh'
@@ -25,15 +25,15 @@ URL = 'https://github.com/aosingh/sqlite_rx'
 
 PACKAGES = ['sqlite_rx']
 
-INSTALL_REQUIRES = ['msgpack==1.0.7',
-                    'pyzmq==25.1.1',
-                    'tornado==6.3.3',
+INSTALL_REQUIRES = ['msgpack==1.0.8',
+                    'pyzmq==26.0.3',
+                    'tornado==6.4.1',
                     'billiard==4.2.0']
 
-CLI_REQUIRES = ['click==8.1.7', 'rich==13.6.0', 'pygments==2.16.1']
+CLI_REQUIRES = ['click==8.1.7', 'rich==13.7.1', 'pygments==2.18.0']
 
-TEST_REQUIRE = ['pytest==7.4.3',
-                'coverage==7.3.2']
+TEST_REQUIRE = ['pytest==8.2.2',
+                'coverage==7.5.3']
 
 classifiers = [
     'Topic :: Database :: Database Engines/Servers',
