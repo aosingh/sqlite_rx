@@ -4,6 +4,7 @@ import platform
 import socket
 import sqlite3
 import sys
+import threading
 import traceback
 import zlib
 from signal import SIGTERM, SIGINT, signal
@@ -190,8 +191,9 @@ class SQLiteServer(SQLiteZMQProcess):
 
         LOG.info("SQLiteServer version %s", get_version())
         LOG.info("SQLiteServer (Tornado) i/o loop started..")
+        LOG.info("Backup thread %s", self.back_up_recurring_thread)
 
-        if self.back_up_recurring_thread:
+        if self.back_up_recurring_thread and not self.back_up_recurring_thread.is_alive():
             self.back_up_recurring_thread.start()
 
         LOG.info("Ready to accept client connections on %s", self._bind_address)
