@@ -192,7 +192,6 @@ class SQLiteServer(SQLiteZMQProcess):
         LOG.info("SQLiteServer version %s", get_version())
         LOG.info("SQLiteServer (Tornado) i/o loop started..")
         LOG.info("Backup thread %s", self.back_up_recurring_thread)
-        LOG.info("Backup thread is running %s", self.back_up_recurring_thread.is_alive())
 
         if self.back_up_recurring_thread and not self.back_up_recurring_thread.is_alive():
             self.back_up_recurring_thread.start()
