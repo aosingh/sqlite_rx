@@ -1,19 +1,10 @@
-FROM python:3.10.5-slim as base
-
-COPY . /sqlite_rx
+FROM python:3.13-slim as base
 
 WORKDIR /svc
 
-RUN pip install --upgrade pip
-RUN pip install Cython
-RUN pip install wheel && pip wheel --wheel-dir=/svc/wheels /sqlite_rx[cli]
-RUN rm -rf /sqlite_rx
+COPY . /svc
 
+RUN pip install --upgrade pip pipx && pipx install uv
+RUN uv venv && uv sync --extra cli
+RUN ln -s .venv/bin/sqlite* bin/ 
 
-FROM python:3.10.5-slim
-
-COPY --from=base /svc /svc
-WORKDIR /svc
-
-RUN pip install --upgrade pip
-RUN pip install --no-index /svc/wheels/*.whl

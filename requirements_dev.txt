@@ -1,7 +1,0 @@
-coverage
-pip
-build
-wheel
-pytest
-setuptools
-twine

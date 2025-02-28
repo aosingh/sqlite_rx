@@ -1,10 +1,15 @@
 .venv
 *.pyc
+*.cxml
 .idea
+.python-version
+.DS_Store
 sqlite_rx.egg-info/
 cover/
 build/
 dist/
+bin/
+data/
 .coverage
 .pytest_cache
 .coverage
@@ -15,4 +20,4 @@ start_server.py
 run_client.py
 curve_client.py
 .pypy3venv/
-
+.envrc

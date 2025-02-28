@@ -1,3 +1,99 @@
 [build-system]
-requires = ['setuptools >= 40.8.0', 'wheel']
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sqlite_rx"
+version = "2.0.0-alpha"
+description = "Python SQLite Client and Server"
+keywords = ["sqlite", "client", "server", "fast", "secure"]
+license = {text = "MIT License"}
+classifiers = [
+    "Topic :: Database :: Database Engines/Servers",
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Education",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: System Administrators",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Unix",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS",
+]
+authors = [{name = "Abhishek Singh", email = "abhishek.singh20141@gmail.com"}]
+maintainers = [{name = "Abhishek Singh", email = "abhishek.singh20141@gmail.com"}]
+requires-python = ">=3.8"
+dependencies = [
+    "billiard==4.2.1",
+    "msgpack==1.1.0",
+    "pyzmq==26.2.0",
+    "tornado==6.4.2",
+    "click==8.1.7",
+    "psutil>=7.0.0",
+]
+
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+[project.urls]
+Homepage = "https://aosingh.github.io/sqlite_rx/"
+Documentation = "https://aosingh.github.io/sqlite_rx/"
+Source = "https://github.com/aosingh/sqlite_rx"
+"Bug Tracker" = "https://github.com/aosingh/sqlite_rx/issues"
+CI = "https://github.com/aosingh/sqlite_rx/actions"
+"Release Notes" = "https://github.com/aosingh/sqlite_rx/releases"
+License = "https://github.com/aosingh/sqlite_rx/blob/master/LICENSE"
+
+[project.optional-dependencies]
+cli = [
+    "click==8.1.7",
+    "rich==13.9.3",
+    "pygments==2.18.0",
+]
+
+[project.scripts]
+sqlite-server = "sqlite_rx.cli.server:main"
+sqlite-client = "sqlite_rx.cli.client:main"
+sqlite-multi-server = "sqlite_rx.cli.multiserver:main"
+
+[tool.setuptools]
+zip-safe = false
+package-dir = {sqlite_rx = "sqlite_rx"}
+include-package-data = true
+script-files = ["bin/curve-keygen"]
+test-require = """
+pytest
+coverage"""
+
+[tool.setuptools.packages.find]
+where = ["sqlite_rx"]
+exclude = ["tests"]
+namespaces = false
+
+[tool.coverage.run]
+branch = true
+concurrency = ["multiprocessing"]
+parallel = true
+source = ["sqlite_rx"]
+
+[dependency-groups]
+dev = [
+    "build>=1.2.2.post1",
+    "coverage>=7.6.1",
+    "files-to-prompt>=0.6",
+    "hatchling>=1.27.0",
+    "pip>=25.0.1",
+    "pytest>=8.3.4",
+    "setuptools>=75.3.0",
+    "twine>=6.1.0",
+    "wheel>=0.45.1",
+]

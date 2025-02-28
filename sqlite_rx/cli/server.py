@@ -98,7 +98,6 @@ def handle_help(ctx: click.Context,
               default=False,
               show_default=True)
 @click.option('--curve-dir',
-              '-d',
               type=click.Path(exists=True),
               help='Curve Key directory',
               default=None)
@@ -119,6 +118,10 @@ def handle_help(ctx: click.Context,
               default=600.0,
               type=click.FLOAT,
               show_default=True)
+@click.option('--data-directory',
+              type=click.Path(file_okay=False),
+              help='Base directory for database files (if using relative paths)',
+              default=None)
 @click.option("--help",
               is_flag=True,
               is_eager=True,
@@ -133,7 +136,8 @@ def main(log_level,
          curve_dir,
          key_id,
          backup_database,
-         backup_interval):
+         backup_interval,
+         data_directory):
     logging.config.dictConfig(get_default_logger_settings(level=log_level))
     LOG.info("Python Platform %s", platform.python_implementation())
     kwargs = {
@@ -144,7 +148,8 @@ def main(log_level,
         'use_encryption': curvezmq,
         'server_curve_id': key_id,
         'backup_database': backup_database,
-        'backup_interval': backup_interval
+        'backup_interval': backup_interval,
+        'data_directory': data_directory
     }
     LOG.info('Args %s', pformat(kwargs))
     server = SQLiteServer(**kwargs)

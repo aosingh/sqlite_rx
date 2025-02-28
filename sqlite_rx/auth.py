@@ -6,7 +6,7 @@ from typing import Dict, Set
 
 import zmq
 import zmq.auth
-from sqlite_rx.exception import SQLiteRxAuthConfigError
+from .exception import SQLiteRxAuthConfigError
 
 
 LOG = logging.getLogger(__name__)
