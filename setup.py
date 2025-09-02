@@ -4,9 +4,9 @@ from os import path
 from setuptools import find_packages, setup
 
 
-if sys.version_info < (3, 8):
+if sys.version_info < (3, 9):
     print("Error: sqlite-rx does not support this version of Python.")
-    print("Please upgrade to Python 3.8 or higher.")
+    print("Please upgrade to Python 3.9 or higher.")
     sys.exit(1)
 
 this_directory = path.abspath(path.dirname(__file__))
@@ -44,12 +44,12 @@ classifiers = [
     'Intended Audience :: System Administrators',
     'License :: OSI Approved :: MIT License',
     'Programming Language :: Python :: 3 :: Only',
-    'Programming Language :: Python :: 3.8',
     'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
     'Programming Language :: Python :: 3.12',
     'Programming Language :: Python :: 3.13',
+    'Programming Language :: Python :: 3.14',
     'Operating System :: POSIX :: Linux',
     'Operating System :: Unix',
     'Operating System :: Microsoft :: Windows',
@@ -95,5 +95,5 @@ setup(
     include_package_data=True,
     classifiers=classifiers,
     keywords=keywords,
-    python_requires='>=3.8'
+    python_requires='>=3.9'
 )
