@@ -1,3 +1,101 @@
 [build-system]
 requires = ['setuptools >= 40.8.0', 'wheel']
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "sqlite_rx"
+dynamic = ["version"]
+description = "Python SQLite Client and Server"
+readme = {file = "README.md", content-type = "text/markdown"}
+requires-python = ">=3.10"
+authors = [
+    {name="Abhishek Singh", email="abhishek.singh20141@gmail.com"}
+]
+maintainers =[
+    {name="Abhishek Singh", email="abhishek.singh20141@gmail.com"}
+]
+keywords = [
+	"sqlite",
+	"server",
+    "client",
+    "secure"
+]
+license =  "MIT"
+license-files = ["LICENSE"]
+classifiers = [
+    "Topic :: Database :: Database Engines/Servers",
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Education",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Intended Audience :: System Administrators",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Unix",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS"
+]
+dependencies = [
+    "msgpack",
+    "tornado",
+    "pyzmq",
+    "billiard"
+]
+
+[project.optional-dependencies]
+test = [
+    "coverage",
+    "pytest",
+]
+cli = [
+    "click",
+    "rich",
+    "pygments",
+]
+
+[project.scripts]
+curve-keygen = "sqlite_rx.cli.keygen:main"
+sqlite-server = "sqlite_rx.cli.server:main"
+sqlite-client = "sqlite_rx.cli.client:main"
+
+
+[project.urls]
+Homepage = "https://github.com/aosingh/sqlite_rx"
+Repository = "https://github.com/aosingh/sqlite_rx"
+Issues = "https://github.com/aosingh/sqlite_rx/issues"
+Documentation = "https://aosingh.github.io/sqlite_rx/"
+CI = "https://github.com/aosingh/sqlite_rx/actions"
+
+[tool.setuptools]
+packages = ["sqlite_rx", "sqlite_rx.cli"]
+
+[tool.setuptools.dynamic]
+version = { attr = "sqlite_rx.version.__version__" }
+
+[tool.black]
+line-length = 79
+target-version = ["py310", "py311", "py312", "py313"]
+required-version = 24
+
+[tool.ruff]
+line-length = 79
+target-version = "py310"
+per-file-ignores = { "__init__.py" = ["F401"] }
+
+[tool.pytest.ini_options]
+minversion = "8.3.0"
+testpaths = [
+    "tests"
+]
+
+[tools.coverage.run]
+branch = true
+concurrency = "multiprocessing"
+parallel = true
+source = "sqlite_rx"

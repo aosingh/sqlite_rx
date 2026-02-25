@@ -40,7 +40,3 @@ RUN pip install --no-index /svc/wheels/*.whl
 
 USER ${USERNAME}
 WORKDIR ${HOME_DIR}
-
-
-
-

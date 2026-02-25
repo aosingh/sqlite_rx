@@ -1,0 +1,33 @@
+import argparse
+import logging
+import socket
+import sys
+
+import zmq.auth
+
+from sqlite_rx.auth import KeyGenerator
+
+logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+
+LOG = logging.getLogger(__name__)
+
+
+def main():
+    """
+    Modeled after ssh-keygen.
+    Implementation idea borrowed from : https://github.com/danielrobbins/ibm-dw-zeromq-2/blob/master/curve-keygen
+    """
+    if zmq.zmq_version_info() < (4, 0):
+        raise RuntimeError(
+            "Security is not supported in libzmq version < 4.0. libzmq version {0}".format(
+                zmq.zmq_version()
+            )
+        )
+    mode = "client"
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--mode", default=mode, help="`client` or `server`")
+    args = parser.parse_args()
+    key_id = "id_{}_{}_curve".format(args.mode, socket.gethostname())
+    LOG.info("Generating keys in %s", mode)
+    kg = KeyGenerator(key_id=key_id)
+    kg.generate()

@@ -1,4 +1,4 @@
-# sqlite_rx 
+# sqlite_rx
 [![PyPI version](https://badge.fury.io/py/sqlite-rx.svg)](https://pypi.python.org/pypi/sqlite-rx) [![sqlite-rx](https://github.com/aosingh/sqlite_rx/actions/workflows/sqlite_build.yaml/badge.svg)](https://github.com/aosingh/sqlite_rx/actions) [![Downloads](https://pepy.tech/badge/sqlite-rx)](https://pepy.tech/project/sqlite-rx)
 
 
@@ -17,7 +17,7 @@
 
 # Introduction
 
-[SQLite](https://www.sqlite.org/index.html) is a lightweight database written in C. 
+[SQLite](https://www.sqlite.org/index.html) is a lightweight database written in C.
 Python has in-built support to interact with the database (locally) which is either stored on disk or in memory.
 
 With `sqlite_rx`, clients should be able to communicate with an `SQLiteServer` in a fast, simple and secure manner and execute queries remotely.
@@ -47,10 +47,10 @@ from sqlite_rx.server import SQLiteServer
 
 def main():
 
-    # database is a path-like object giving the pathname 
-    # of the database file to be opened. 
-    
-    # You can use ":memory:" to open a database connection to a database 
+    # database is a path-like object giving the pathname
+    # of the database file to be opened.
+
+    # You can use ":memory:" to open a database connection to a database
     # that resides in RAM instead of on disk
 
     server = SQLiteServer(database=":memory:",
@@ -85,4 +85,3 @@ with client:
 
 {'error': None, 'items': []}
 ```
-

@@ -1,4 +1,3 @@
-
 class SQLiteRxError(Exception):
     pass
 
@@ -25,6 +24,7 @@ class SQLiteRxCompressionError(SQLiteRxError):
 
 class SQLiteRxConnectionError(SQLiteRxError):
     pass
+
 
 class SQLiteRxBackUpError(SQLiteRxError):
     pass

@@ -1,9 +1,8 @@
 import logging.config
-import threading
 import platform
 import sqlite3
 import sys
-
+import threading
 from typing import Any
 
 LOG = logging.getLogger(__name__)
@@ -11,10 +10,10 @@ LOG = logging.getLogger(__name__)
 
 def is_backup_supported():
 
-    if sys.platform.startswith('win'):
+    if sys.platform.startswith("win"):
         return False
 
-    if platform.python_implementation().lower() == 'pypy':
+    if platform.python_implementation().lower() == "pypy":
         return False
 
     return True
@@ -31,7 +30,7 @@ class SQLiteBackUp:
 
         def progress(status, remaining, total):
             copied = total - remaining
-            LOG.info('Copied %s of %s pages', copied, total)
+            LOG.info("Copied %s of %s pages", copied, total)
 
         source = sqlite3.connect(self.src)
         backup = sqlite3.connect(self.target)
@@ -39,7 +38,9 @@ class SQLiteBackUp:
         with backup:
             source.backup(backup, pages=self.pages, progress=progress)
 
-        LOG.info("Finished Backup: Source %s , Target %s ", self.src, self.target)
+        LOG.info(
+            "Finished Backup: Source %s , Target %s ", self.src, self.target
+        )
 
 
 class RecurringTimer(threading.Timer):

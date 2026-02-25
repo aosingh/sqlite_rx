@@ -5,3 +5,4 @@ wheel
 pytest
 setuptools
 twine
+pre-commit
