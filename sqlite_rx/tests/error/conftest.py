@@ -1,9 +1,9 @@
-import pytest
 import logging.config
+
+import pytest
 
 from sqlite_rx import get_default_logger_settings
 from sqlite_rx.client import SQLiteClient
-
 
 logging.config.dictConfig(get_default_logger_settings(level="DEBUG"))
 

@@ -1,23 +1,22 @@
-# sqlite_rx 
+# sqlite_rx
 [![PyPI version](https://badge.fury.io/py/sqlite-rx.svg)](https://pypi.python.org/pypi/sqlite-rx) [![sqlite-rx](https://github.com/aosingh/sqlite_rx/actions/workflows/sqlite_build.yaml/badge.svg)](https://github.com/aosingh/sqlite_rx/actions) [![Downloads](https://pepy.tech/badge/sqlite-rx)](https://pepy.tech/project/sqlite-rx)
 
 
-[![Python 3.8](https://img.shields.io/badge/python-3.8-blue.svg)](https://www.python.org/downloads/release/python-380/)
-[![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)]((https://www.python.org/downloads/release/python-390/))
 [![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)](https://www.python.org/downloads/release/python-3100/)
 [![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/release/python-3110/)
 [![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/release/python-3120/)
+[![Python 3.13](https://img.shields.io/badge/python-3.13-blue.svg)](https://www.python.org/downloads/release/python-3130/)
+[![Python 3.14](https://img.shields.io/badge/python-3.14-blue.svg)](https://www.python.org/downloads/release/python-3140/)
 
-
-[![PyPy3.8](https://img.shields.io/badge/python-PyPy3.8-blue.svg)](https://www.pypy.org/download.html)
-[![PyPy3.9](https://img.shields.io/badge/python-PyPy3.9-blue.svg)](https://www.pypy.org/download.html)
+[![PyPy3.10](https://img.shields.io/badge/python-PyPy3.10-blue.svg)](https://www.pypy.org/download.html)
+[![PyPy3.11](https://img.shields.io/badge/python-PyPy3.11-blue.svg)](https://www.pypy.org/download.html)
 
 
 #### For documentation, usage and examples refer [https://aosingh.github.io/sqlite_rx/](https://aosingh.github.io/sqlite_rx/)
 
 # Introduction
 
-[SQLite](https://www.sqlite.org/index.html) is a lightweight database written in C. 
+[SQLite](https://www.sqlite.org/index.html) is a lightweight database written in C.
 Python has in-built support to interact with the database (locally) which is either stored on disk or in memory.
 
 With `sqlite_rx`, clients should be able to communicate with an `SQLiteServer` in a fast, simple and secure manner and execute queries remotely.
@@ -47,10 +46,10 @@ from sqlite_rx.server import SQLiteServer
 
 def main():
 
-    # database is a path-like object giving the pathname 
-    # of the database file to be opened. 
-    
-    # You can use ":memory:" to open a database connection to a database 
+    # database is a path-like object giving the pathname
+    # of the database file to be opened.
+
+    # You can use ":memory:" to open a database connection to a database
     # that resides in RAM instead of on disk
 
     server = SQLiteServer(database=":memory:",
@@ -85,4 +84,3 @@ with client:
 
 {'error': None, 'items': []}
 ```
-

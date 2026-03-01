@@ -6,12 +6,12 @@ from typing import Dict, Set
 
 import zmq
 import zmq.auth
-from sqlite_rx.exception import SQLiteRxAuthConfigError
 
+from sqlite_rx.exception import SQLiteRxAuthConfigError
 
 LOG = logging.getLogger(__name__)
 
-__all__ = ['Authorizer', 'KeyGenerator', 'KeyMonkey', 'DEFAULT_AUTH_CONFIG']
+__all__ = ["Authorizer", "KeyGenerator", "KeyMonkey", "DEFAULT_AUTH_CONFIG"]
 
 # Default Authorization Config
 DEFAULT_AUTH_CONFIG = {
@@ -35,7 +35,6 @@ DEFAULT_AUTH_CONFIG = {
         sqlite3.SQLITE_REINDEX,
         sqlite3.SQLITE_ANALYZE,
     },
-
     sqlite3.SQLITE_DENY: {
         sqlite3.SQLITE_DELETE,
         sqlite3.SQLITE_DROP_INDEX,
@@ -47,11 +46,7 @@ DEFAULT_AUTH_CONFIG = {
         sqlite3.SQLITE_DROP_TRIGGER,
         sqlite3.SQLITE_DROP_VIEW,
     },
-
-    sqlite3.SQLITE_IGNORE: {
-        sqlite3.SQLITE_PRAGMA
-    }
-
+    sqlite3.SQLITE_IGNORE: {sqlite3.SQLITE_PRAGMA},
 }
 
 
@@ -82,11 +77,13 @@ class Authorizer:
         self.valid_return_values = {
             sqlite3.SQLITE_IGNORE,
             sqlite3.SQLITE_OK,
-            sqlite3.SQLITE_DENY}
+            sqlite3.SQLITE_DENY,
+        }
         if any(k not in self.valid_return_values for k in self.config.keys()):
             raise SQLiteRxAuthConfigError(
                 "Allowed return values are: "
-                "sqlite3.SQLITE_OK(0), sqlite3.SQLITE_DENY(1), sqlite3.SQLITE_IGNORE(2)")
+                "sqlite3.SQLITE_OK(0), sqlite3.SQLITE_DENY(1), sqlite3.SQLITE_IGNORE(2)"
+            )
 
     def __call__(self, action: int, *args, **kwargs) -> int:
         """Returns the permission for the passed ``action``
@@ -108,9 +105,7 @@ class Authorizer:
 
 class KeyGenerator:
 
-    def __init__(self,
-                 key_id: str = "id_curve",
-                 destination_dir: str = None):
+    def __init__(self, key_id: str = "id_curve", destination_dir: str = None):
         """Generates curve public and private keys required for encryption.
         This class should not be used by users to generate keys.
         Use the script ``curve-keygen``
@@ -129,16 +124,20 @@ class KeyGenerator:
 
         """
         self.my_id = key_id
-        self.curvedir = destination_dir if destination_dir else os.path.join(
-            os.path.expanduser("~"), ".curve")
+        self.curvedir = (
+            destination_dir
+            if destination_dir
+            else os.path.join(os.path.expanduser("~"), ".curve")
+        )
         self.public_key = os.path.join(
-            self.curvedir, "{}.key".format(self.my_id))
+            self.curvedir, "{}.key".format(self.my_id)
+        )
         self.private_key = os.path.join(
-            self.curvedir,
-            "{}.key_secret".format(
-                self.my_id))
+            self.curvedir, "{}.key_secret".format(self.my_id)
+        )
         self.authorized_clients_dir = os.path.join(
-            self.curvedir, "authorized_clients")
+            self.curvedir, "authorized_clients"
+        )
 
     def generate(self):
         """
@@ -166,7 +165,8 @@ class KeyGenerator:
         os.chmod(self.authorized_clients_dir, 0o700)
 
         server_public_file, server_secret_file = zmq.auth.create_certificates(
-            self.curvedir, self.my_id)
+            self.curvedir, self.my_id
+        )
         LOG.info(server_public_file)
         LOG.info(server_secret_file)
         os.chmod(self.public_key, 0o600)
@@ -177,9 +177,7 @@ class KeyGenerator:
 
 class KeyMonkey:
 
-    def __init__(self,
-                 key_id: str = "id_curve",
-                 destination_dir: str = None):
+    def __init__(self, key_id: str = "id_curve", destination_dir: str = None):
         """Setup secure client or server using the CurveZMQ
 
         This class expects the following keys depending on whether you want to setup a secure server
@@ -199,14 +197,22 @@ class KeyMonkey:
         """
 
         self.my_id = key_id
-        self.curvedir = destination_dir if destination_dir else os.path.join(os.path.expanduser("~"), ".curve")
-        self.public_key = os.path.join(self.curvedir, "{}.key".format(self.my_id))
-        self.private_key = os.path.join(self.curvedir, "{}.key_secret".format(self.my_id))
-        self.authorized_clients_dir = os.path.join(self.curvedir, "authorized_clients")
+        self.curvedir = (
+            destination_dir
+            if destination_dir
+            else os.path.join(os.path.expanduser("~"), ".curve")
+        )
+        self.public_key = os.path.join(
+            self.curvedir, "{}.key".format(self.my_id)
+        )
+        self.private_key = os.path.join(
+            self.curvedir, "{}.key_secret".format(self.my_id)
+        )
+        self.authorized_clients_dir = os.path.join(
+            self.curvedir, "authorized_clients"
+        )
 
-    def setup_secure_server(self,
-                            server,
-                            bind_address: str):
+    def setup_secure_server(self, server, bind_address: str):
         """
         Use this method to setup a secure server.
 
@@ -219,21 +225,28 @@ class KeyMonkey:
 
         """
         try:
-            server.curve_publickey, server.curve_secretkey = zmq.auth.load_certificate(self.private_key)
+            server.curve_publickey, server.curve_secretkey = (
+                zmq.auth.load_certificate(self.private_key)
+            )
             server.curve_server = True
-            LOG.info("Secure setup completed using on %s using curve key %s", bind_address, self.my_id)
+            LOG.info(
+                "Secure setup completed using on %s using curve key %s",
+                bind_address,
+                self.my_id,
+            )
             return server
         except IOError:
-            LOG.exception("Couldn't load the private key: %s", self.private_key)
+            LOG.exception(
+                "Couldn't load the private key: %s", self.private_key
+            )
             raise
         except Exception:
             LOG.exception("Exception while setting up CURVECP")
             raise
 
-    def setup_secure_client(self,
-                            client,
-                            connect_address: str,
-                            servername: str):
+    def setup_secure_client(
+        self, client, connect_address: str, servername: str
+    ):
         """
         Use this method to setup a secure client. Clients also need the
         servername to look for server's public key
@@ -251,19 +264,31 @@ class KeyMonkey:
 
         """
         try:
-            client.curve_publickey, client.curve_secretkey = zmq.auth.load_certificate(self.private_key)
+            client.curve_publickey, client.curve_secretkey = (
+                zmq.auth.load_certificate(self.private_key)
+            )
         except IOError:
-            LOG.exception("Couldn't load the client private key: %s", self.private_key)
+            LOG.exception(
+                "Couldn't load the client private key: %s", self.private_key
+            )
             raise
         else:
             # Clients need server's public key for encryption
             try:
-                client.curve_serverkey, _ = zmq.auth.load_certificate(os.path.join(self.curvedir, f"{servername}.key"))
+                client.curve_serverkey, _ = zmq.auth.load_certificate(
+                    os.path.join(self.curvedir, f"{servername}.key")
+                )
             except IOError:
                 LOG.exception(
-                    "Couldn't load the server public key %s ", os.path.join(self.curvedir, f"{servername}.key"))
+                    "Couldn't load the server public key %s ",
+                    os.path.join(self.curvedir, f"{servername}.key"),
+                )
                 raise
             else:
-                LOG.info("Client connecting to %s (key %s) using curve key '%s'.",
-                         connect_address, servername, self.my_id)
+                LOG.info(
+                    "Client connecting to %s (key %s) using curve key '%s'.",
+                    connect_address,
+                    servername,
+                    self.my_id,
+                )
                 return client

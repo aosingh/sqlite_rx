@@ -5,7 +5,7 @@ source = sqlite_rx
 concurrency =
     thread
     multiprocessing
-debug = 
+debug =
     multiproc
 omit =
     /*/tests/*
@@ -14,7 +14,7 @@ omit =
     /home/travis/virtualenv/*
     ./sqlite_rx/run_client.py
     ./sqlite_rx/start_server.py
-# plugins = 
+# plugins =
 #   billiard_coverage_plugin
 
 [html]

@@ -6,14 +6,14 @@ import zlib
 
 import msgpack
 import zmq
+
 from sqlite_rx.auth import KeyMonkey
 from sqlite_rx.exception import (
     SQLiteRxCompressionError,
     SQLiteRxConnectionError,
-    SQLiteRxTransportError,
     SQLiteRxSerializationError,
+    SQLiteRxTransportError,
 )
-
 
 DEFAULT_REQUEST_TIMEOUT = 2500
 REQUEST_RETRIES = 5
@@ -23,18 +23,20 @@ PARENT_DIR = os.path.dirname(__file__)
 
 LOG = logging.getLogger(__name__)
 
-__all__ = ['SQLiteClient']
+__all__ = ["SQLiteClient"]
 
 
 class SQLiteClient(threading.local):
 
-    def __init__(self,
-                 connect_address: str,
-                 use_encryption: bool = False,
-                 curve_dir: str = None,
-                 client_curve_id: str = None,
-                 server_curve_id: str = None,
-                 context=None):
+    def __init__(
+        self,
+        connect_address: str,
+        use_encryption: bool = False,
+        curve_dir: str = None,
+        client_curve_id: str = None,
+        server_curve_id: str = None,
+        context=None,
+    ):
         """
         A thin and reliable client to send query execution requests to a remote :class: `sqlite_rx.server.SQLiteServer`
 
@@ -49,12 +51,22 @@ class SQLiteClient(threading.local):
             context: `zmq.Context`
 
         """
-        self.client_id = "python@{}_{}".format(socket.gethostname(), threading.get_ident())
+        self.client_id = "python@{}_{}".format(
+            socket.gethostname(), threading.get_ident()
+        )
         self._context = context or zmq.Context.instance()
         self._connect_address = connect_address
         self._encrypt = use_encryption
-        self.server_curve_id = server_curve_id if server_curve_id else "id_server_{}_curve".format(socket.gethostname())
-        client_curve_id = client_curve_id if client_curve_id else "id_client_{}_curve".format(socket.gethostname())
+        self.server_curve_id = (
+            server_curve_id
+            if server_curve_id
+            else "id_server_{}_curve".format(socket.gethostname())
+        )
+        client_curve_id = (
+            client_curve_id
+            if client_curve_id
+            else "id_client_{}_curve".format(socket.gethostname())
+        )
         self._keymonkey = KeyMonkey(client_curve_id, destination_dir=curve_dir)
         self._client = self._init_client()
 
@@ -63,7 +75,9 @@ class SQLiteClient(threading.local):
         client = self._context.socket(zmq.REQ)
         if self._encrypt:
             LOG.debug("requests will be encrypted; will load CurveZMQ keys")
-            client = self._keymonkey.setup_secure_client(client, self._connect_address, self.server_curve_id)
+            client = self._keymonkey.setup_secure_client(
+                client, self._connect_address, self.server_curve_id
+            )
         client.connect(self._connect_address)
         self._poller = zmq.Poller()
         self._poller.register(client, zmq.POLLIN)
@@ -86,7 +100,9 @@ class SQLiteClient(threading.local):
 
     def _recv_response(self):
         try:
-            response = msgpack.loads(zlib.decompress(self._client.recv()), raw=False)
+            response = msgpack.loads(
+                zlib.decompress(self._client.recv()), raw=False
+            )
         except zmq.ZMQError:
             LOG.exception("Exception while receiving message")
             raise SQLiteRxTransportError("ZMQ receive error")
@@ -98,10 +114,7 @@ class SQLiteClient(threading.local):
             raise SQLiteRxSerializationError("msgpack deserialization error")
         return response
 
-    def execute(self,
-                query: str,
-                *args,
-                **kwargs) -> dict:
+    def execute(self, query: str, *args, **kwargs) -> dict:
         """Synchronous which will send the `query` and the parameters to a remote SQLiteServer instance,
         wait for the response and return the response to the caller.
 
@@ -133,21 +146,25 @@ class SQLiteClient(threading.local):
         """
         LOG.info("Executing query %s for client %s", query, self.client_id)
 
-        request_retries = kwargs.pop('retries', REQUEST_RETRIES)
-        execute_many = kwargs.pop('execute_many', False)
-        execute_script = kwargs.pop('execute_script', False)
-        request_timeout = kwargs.pop('request_timeout', DEFAULT_REQUEST_TIMEOUT)
+        request_retries = kwargs.pop("retries", REQUEST_RETRIES)
+        execute_many = kwargs.pop("execute_many", False)
+        execute_script = kwargs.pop("execute_script", False)
+        request_timeout = kwargs.pop(
+            "request_timeout", DEFAULT_REQUEST_TIMEOUT
+        )
 
         # Do some client side validations.
         if execute_script and execute_many:
-            raise ValueError("Both `execute_script` and `execute_many` cannot be True")
+            raise ValueError(
+                "Both `execute_script` and `execute_many` cannot be True"
+            )
 
         request = {
             "client_id": self.client_id,
             "query": query,
             "params": args,
             "execute_many": execute_many,
-            "execute_script": execute_script
+            "execute_script": execute_script,
         }
 
         expect_reply = True
@@ -171,11 +188,13 @@ class SQLiteClient(threading.local):
                     self._client = self._init_client()
                     self._send_request(request)
 
-        raise SQLiteRxConnectionError("No response after retrying. Abandoning Request")
-    
+        raise SQLiteRxConnectionError(
+            "No response after retrying. Abandoning Request"
+        )
+
     def __enter__(self):
         return self
-    
+
     def __exit__(self, exc_type, exc_value, traceback):
         self.cleanup()
 
@@ -185,17 +204,26 @@ class SQLiteClient(threading.local):
             self._client.close()
             self._poller.unregister(self._client)
         except zmq.ZMQError as e:
-            if e.errno in (zmq.EINVAL,
-                           zmq.EPROTONOSUPPORT,
-                           zmq.ENOCOMPATPROTO,
-                           zmq.EADDRINUSE,
-                           zmq.EADDRNOTAVAIL,):
+            if e.errno in (
+                zmq.EINVAL,
+                zmq.EPROTONOSUPPORT,
+                zmq.ENOCOMPATPROTO,
+                zmq.EADDRINUSE,
+                zmq.EADDRNOTAVAIL,
+            ):
                 LOG.error("ZeroMQ Transportation endpoint was not setup")
 
             elif e.errno in (zmq.ENOTSOCK,):
-                LOG.error("ZeroMQ request was made against a non-existent device or invalid socket")
+                LOG.error(
+                    "ZeroMQ request was made against a non-existent device or invalid socket"
+                )
 
-            elif e.errno in (zmq.ETERM, zmq.EMTHREAD,):
-                LOG.error("ZeroMQ context is not a state to handle this request for socket")
+            elif e.errno in (
+                zmq.ETERM,
+                zmq.EMTHREAD,
+            ):
+                LOG.error(
+                    "ZeroMQ context is not a state to handle this request for socket"
+                )
         except Exception:
             LOG.exception("Exception while shutting down SQLiteClient")
