@@ -6,7 +6,7 @@ url: "https://aosingh.github.io" # the base hostname & protocol for your site, e
 
 permalink: pretty
 
-remote_theme: pmarsceill/just-the-docs
+remote_theme: just-the-docs/just-the-docs
 heading_anchors: true
 
 aux_links:
