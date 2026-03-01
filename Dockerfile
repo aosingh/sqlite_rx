@@ -36,7 +36,7 @@ COPY --from=builder /svc /svc
 WORKDIR /svc
 
 RUN pip install --upgrade pip
-RUN pip install --no-index /svc/wheels/*.whl
+RUN pip install --no-index /svc/wheels/*.whl && mkdir /data && chown -R ${USERNAME}:${USERNAME} /data
 
 USER ${USERNAME}
 WORKDIR ${HOME_DIR}

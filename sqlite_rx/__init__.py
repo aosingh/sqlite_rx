@@ -1,4 +1,5 @@
-__version__ = "1.2.0"
+from sqlite_rx.version import __version__
+
 __author__ = "Abhishek Singh"
 __authoremail__ = "abhishek.singh20141@gmail.com"
 

@@ -130,7 +130,7 @@ def handle_help(
 )
 @click.option(
     "--curve-dir",
-    "-d",
+    "-c",
     type=click.Path(exists=True),
     help="Curve Key directory",
     default=None,
